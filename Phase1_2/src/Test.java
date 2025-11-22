@@ -1,4 +1,5 @@
 import Modules.Book;
+import Modules.GenericLinkedList;
 import Modules.Library;
 import Common.Status;
 
@@ -55,5 +56,23 @@ public class Test {
         ArrayList<Book> sortedBooks = library.sortBooksByReleaseYear();
         System.out.println("\nLibrary after sort : ");
         sortedBooks.forEach(System.out::println);
+
+        // Generic linked list insertion :
+        GenericLinkedList<Integer> linkedList = new GenericLinkedList<>();
+        // Test insertion
+        System.out.println("Insertion test : ");
+        linkedList.insert(1);
+        linkedList.insert(-1);
+        linkedList.insert(100);
+        linkedList.insert(1);
+        linkedList.insert(50);
+        linkedList.insert(99);
+        linkedList.insert(-1);
+        linkedList.printList();
+
+        // Test removal :
+        System.out.println("Removal test : ");
+        linkedList.removeByKey(-1);
+        linkedList.printList();
     }
 }

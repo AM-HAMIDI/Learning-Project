@@ -10,12 +10,20 @@ class GenericNode<T> {
         this.nextNode = nextNode;
     }
 
-    T getData(){
+    public T getData(){
         return data;
     }
 
-    GenericNode<T> getNextNode(){
+    public GenericNode<T> getNextNode(){
         return nextNode;
+    }
+
+    public void setData(T data){
+        this.data = data;
+    }
+
+    public void setNextNode(GenericNode<T> nextNode){
+        this.nextNode = nextNode;
     }
 
     @Override
@@ -42,22 +50,79 @@ class GenericNode<T> {
 
 public class GenericLinkedList<T> {
     private GenericNode<T> headNode;
-    private int size = 0;
+    private int size;
 
-    public void insertNode(T data){
-
+    public GenericLinkedList(){
+        headNode = null;
+        size = 0;
     }
 
-    public void removeNode(){
-
+    // ----------------- Insert methods -----------------
+    public void insert(T data){
+        if(isEmpty()){
+            headNode = new GenericNode<>(data , null);
+            incrementSize();
+        }
+        else {
+            GenericNode<T> newNode = new GenericNode<>(data , null);
+            findTailNode().setNextNode(newNode);
+        }
     }
 
+    // ----------------- Remove methods -----------------
+    public void removeByKey(T key){
+        if(isEmpty()) return;
+
+        // Remove invalid heads
+        while(headNode != null && headNode.getData().equals(key)){
+            headNode = headNode.getNextNode();
+            decrementSize();
+        }
+
+        // Remove invalid nodes
+        GenericNode<T> prevNode = headNode;
+        GenericNode<T> node = headNode.getNextNode();
+
+        while(node != null){
+            if(node.getData().equals(key)){
+                node = node.getNextNode();
+                prevNode.setNextNode(node);
+                decrementSize();
+            }
+            else {
+                prevNode = node;
+                node = node.getNextNode();
+            }
+        }
+    }
+
+    // ----------------- Print methods -----------------
     public void printList(){
         GenericNode<T> node = headNode;
         while(node != null){
             System.out.println(node);
             node = node.getNextNode();
         }
+    }
+
+    private void incrementSize(){
+        size += 1;
+    }
+
+    private void decrementSize(){
+        if(size >= 1) size -= 1;
+    }
+
+    private boolean isEmpty(){
+        return size == 0;
+    }
+
+    private GenericNode<T> findTailNode(){
+        GenericNode<T> node = headNode;
+        while(node.getNextNode() != null){
+            node = node.getNextNode();
+        }
+        return node;
     }
 }
 
