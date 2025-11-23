@@ -1,6 +1,6 @@
 package Modules;
-import Common.Status;
 
+import Common.Status;
 import java.util.Objects;
 
 public class Book {

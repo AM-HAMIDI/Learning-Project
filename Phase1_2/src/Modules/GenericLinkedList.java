@@ -1,5 +1,6 @@
 package Modules;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 class GenericNode<T> {
@@ -28,7 +29,7 @@ class GenericNode<T> {
 
     @Override
     public String toString(){
-        return "(data : %s)".formatted(data);
+        return data.toString();
     }
 
     @Override
@@ -57,7 +58,6 @@ public class GenericLinkedList<T> {
         size = 0;
     }
 
-    // ----------------- Insert methods -----------------
     public void insert(T data){
         if(isEmpty()){
             headNode = new GenericNode<>(data , null);
@@ -69,7 +69,6 @@ public class GenericLinkedList<T> {
         }
     }
 
-    // ----------------- Remove methods -----------------
     public void removeByKey(T key){
         if(isEmpty()) return;
 
@@ -94,9 +93,9 @@ public class GenericLinkedList<T> {
                 node = node.getNextNode();
             }
         }
+
     }
 
-    // ----------------- Print methods -----------------
     public void printList(){
         GenericNode<T> node = headNode;
         while(node != null){
@@ -113,8 +112,12 @@ public class GenericLinkedList<T> {
         if(size >= 1) size -= 1;
     }
 
-    private boolean isEmpty(){
+    public boolean isEmpty(){
         return size == 0;
+    }
+
+    public GenericNode<T> getHeadNode(){
+        return headNode;
     }
 
     private GenericNode<T> findTailNode(){
@@ -123,6 +126,16 @@ public class GenericLinkedList<T> {
             node = node.getNextNode();
         }
         return node;
+    }
+
+    public ArrayList<T> getKeysArrayList(){
+        ArrayList<T> keysArrayList = new ArrayList<>();
+        GenericNode<T> node = headNode;
+        while(node != null){
+            keysArrayList.add(node.getData());
+            node = node.getNextNode();
+        }
+        return keysArrayList;
     }
 }
 
