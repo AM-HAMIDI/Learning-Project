@@ -1,7 +1,7 @@
-import Common.CommandMode;
-import Common.Status;
-import Modules.Library;
-import Modules.Book;
+package com.mahsan.library;
+
+import com.mahsan.library.common.*;
+import com.mahsan.library.core.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -9,6 +9,7 @@ import java.util.Scanner;
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
     private static Library library = new Library();
+    private static CLIManager cliManager = new CLIManager();
 
     public static void main(String[] args) {
         startSystem();

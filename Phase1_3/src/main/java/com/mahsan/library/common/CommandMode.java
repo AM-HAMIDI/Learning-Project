@@ -1,4 +1,4 @@
-package Common;
+package com.mahsan.library.common;
 
 import java.util.Arrays;
 
