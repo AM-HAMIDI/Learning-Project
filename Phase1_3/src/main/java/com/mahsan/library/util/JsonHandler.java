@@ -18,9 +18,9 @@ public class JsonHandler {
         file = new File(fileAbsolutePath);
         if(!file.exists()){
             if(createJsonFile())
-                System.out.println(file.getName() + " created!");
+                System.out.println(file.getName() + " has been created!");
             else
-                System.out.println(file.getName() + " couldn't created!");
+                System.out.println(file.getName() + " could not be created!");
         }
         rootJsonNode = readJsonFile();
         if(rootJsonNode == null){

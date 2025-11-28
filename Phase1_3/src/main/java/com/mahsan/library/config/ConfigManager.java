@@ -3,11 +3,20 @@ package com.mahsan.library.config;
 import com.mahsan.library.util.*;
 
 public class ConfigManager {
-    private static final String projectRootPath = System.getProperty("user.dir");
-    private static final String configFilePath = projectRootPath + "/config/config.json";
-    private String bookListsFilePath;
+    private static ConfigManager configManager;
 
-    public ConfigManager(){
+    private final String projectRootPath = System.getProperty("user.dir");
+    private final String projectConfigFilePath = projectRootPath + "/config/config.json";
+    private final JsonHandler jsonHandler = new JsonHandler(projectConfigFilePath);
 
+    private ConfigManager(){}
+
+    public ConfigManager getInstance(){
+        if(configManager == null) configManager = new ConfigManager();
+        return configManager;
+    }
+
+    public String getBooksListsDirPath(){
+        return jsonHandler.getProperty("BookListsDirPath");
     }
 }
