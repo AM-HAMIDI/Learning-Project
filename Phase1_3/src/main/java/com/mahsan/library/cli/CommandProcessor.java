@@ -1,9 +1,12 @@
 package com.mahsan.library.cli;
 
+import com.mahsan.library.Main;
 import com.mahsan.library.common.CommandMode;
 import com.mahsan.library.common.Status;
+import com.mahsan.library.config.ConfigManager;
 import com.mahsan.library.core.models.Book;
 import com.mahsan.library.core.service.LibraryService;
+import com.mahsan.library.util.JsonHandler;
 
 import java.util.ArrayList;
 
@@ -17,124 +20,121 @@ public class CommandProcessor {
     }
 
     public void processCommandMode(CommandMode commandMode){
+        String commandResult = "";
         switch (commandMode){
-            case INSERT_BOOK -> processInsertCommand();
-            case REMOVE_BOOK -> processRemoveCommand();
-            case UPDATE_BOOK -> processUpdateCommand();
-            case PRINT_BOOKS_LIST -> processPrintBooksListCommand();
-            case SEARCH_BOOKS_BY_TITLE -> processSearchBooksByTitleCommand();
-            case SEARCH_BOOKS_BY_AUTHOR -> processSearchBooksByAuthorCommand();
-            case SORT_BOOKS -> processSortBooksCommand();
+            case INVALID_COMMAND -> commandResult = processInvalidCommand();
+            case INSERT_BOOK -> commandResult = processInsertCommand();
+            case REMOVE_BOOK -> commandResult = processRemoveCommand();
+            case UPDATE_BOOK -> commandResult = processUpdateCommand();
+            case PRINT_BOOKS_LIST -> commandResult = processPrintBooksListCommand();
+            case SEARCH_BOOKS_BY_TITLE -> commandResult = processSearchBooksByTitleCommand();
+            case SEARCH_BOOKS_BY_AUTHOR -> commandResult = processSearchBooksByAuthorCommand();
+            case SORT_BOOKS -> commandResult = processSortBooksCommand();
+            case EXIT -> commandResult = processExitCommand();
         }
+        finishCommand(commandMode , commandResult);
     }
 
-    private void processInsertCommand(){
+    private String processInvalidCommand(){
+        return cliManager.getInputError() + "\n";
+    }
+
+    private String processExitCommand(){
+        Main.finishSystem();
+        return "system is finished!\n";
+    }
+
+    private String processInsertCommand(){
         String title = cliManager.getInputTitle();
-        if(title.isEmpty()){
-            System.out.println("title is invalid!\n");
-            return;
-        }
+        if(title.isEmpty()) return "title is invalid!\n";
+
         String author = cliManager.getInputAuthor();
-        if(author.isEmpty()){
-            System.out.println("author is invalid!\n");
-            return;
-        }
+        if(author.isEmpty()) return "author is invalid!\n";
+
         int releaseYear = cliManager.getInputReleaseYear();
-        if(releaseYear == -1){
-            System.out.println("release year is invalid!\n");
-            return;
-        }
+        if(releaseYear == -1) return "release year is invalid!\n";
+
         Status status = cliManager.getInputStatus();
-        if(status == null){
-            System.out.println("status is invalid!\n");
-            return;
-        }
+        if(status == null) return "status is invalid!\n";
 
         libraryService.insertBook(new Book(title , author , releaseYear , status));
-        System.out.println("Book added successfully!\n");
+        return "Book added successfully!\n";
     }
 
-    private void processRemoveCommand() {
+    private String processRemoveCommand() {
         String title = cliManager.getInputTitle();
-        if(title.isEmpty()){
-            System.out.println("title is invalid!\n");
-            return;
-        }
+        if(title.isEmpty()) return "title is invalid!\n";
 
         Book book = libraryService.searchBooksByTitle(title);
-        if(book == null){
-            System.out.println("This book doesn't exists\n");
-            return;
-        }
+        if(book == null) return "This book doesn't exists\n";
 
         libraryService.removeBook(book);
-        System.out.println("Book removed successfully!\n");
+        return "Book removed successfully!\n";
     }
 
-    private void processUpdateCommand() {
+    private String processUpdateCommand() {
         String title = cliManager.getInputTitle();
-        if(title.isEmpty()){
-            System.out.println("title is invalid!\n");
-            return;
-        }
+        if(title.isEmpty()) return "title is invalid!\n";
+
         Status status = cliManager.getInputStatus();
-        if(status == null){
-            System.out.println("status is invalid!\n");
-            return;
-        }
+        if(status == null) return "status is invalid!\n";
+
         Book book = libraryService.searchBooksByTitle(title);
-        if(book == null){
-            System.out.println("book not found!\n");
-            return;
-        }
+        if(book == null) return "book not found!\n";
+
         libraryService.updateBook(book , status);
-        System.out.println("Book updated successfully!\n");
+        return "Book updated successfully!\n";
     }
 
-    private void processPrintBooksListCommand() {
-        System.out.println("Books list :");
-        libraryService.printBooksList();
-        System.out.println();
+    private String processPrintBooksListCommand() {
+        return "Books list :\n" + libraryService.getBooksStringList() + "\n";
     }
 
-    private void processSearchBooksByTitleCommand() {
+    private String processSearchBooksByTitleCommand() {
         String title = cliManager.getInputTitle();
         if(title.isEmpty()){
-            System.out.println("title is invalid!\n");
-            return;
+            return "title is invalid!\n";
         }
         Book book = libraryService.searchBooksByTitle(title);
-        if(book == null){
-            System.out.println("book not found!\n");
-            return;
-        }
-        System.out.println("found book : " + book + "\n");
+        if(book == null) return "book not found!\n";
+        return "found book : " + book + "\n";
     }
 
-    private void processSearchBooksByAuthorCommand(){
+    private String processSearchBooksByAuthorCommand(){
         String author = cliManager.getInputAuthor();
-        if(author.isEmpty()){
-            System.out.println("author is invalid!\n");
-            return;
-        }
+        if(author.isEmpty()) return "author is invalid!\n";
+
         ArrayList<Book> authorBooks = libraryService.searchBooksByAuthor(author);
-        if(authorBooks.isEmpty()){
-            System.out.println("book not found!\n");
-            return;
+        if(authorBooks.isEmpty()) return "book not found!\n";
+
+        StringBuilder result = new StringBuilder();
+        result.append("author books : \n");
+        for(Book book : authorBooks){
+            result.append(book).append("\n");
         }
-        System.out.println("author books : ");
-        authorBooks.forEach(System.out::println);
-        System.out.println();
+        return result.toString();
     }
 
-    private void processSortBooksCommand(){
+    private String processSortBooksCommand(){
         ArrayList<Book> sortedBooks = libraryService.sortBooksByReleaseYear();
-        if(sortedBooks.isEmpty()){
-            System.out.println("library is empty!\n");
-            return;
+        if(sortedBooks.isEmpty()) return "library is empty!\n";
+
+        StringBuilder result = new StringBuilder();
+        result.append("sorted books list : \n");
+        for(Book book : sortedBooks){
+            result.append(book).append("\n");
         }
-        System.out.println("sorted books list : ");
-        sortedBooks.forEach(System.out::println);
-        System.out.println();
+        return result.toString();
+    }
+
+    private void finishCommand(CommandMode commandMode , String result){
+        String commandHistoryFilePath = ConfigManager.getInstance().getCommandHistoryAbsoluteFilePath();
+        JsonHandler jsonHandler = new JsonHandler(commandHistoryFilePath);
+        ArrayList<String[]> newEntry = new ArrayList<>();
+        newEntry.add(new String[]{"index" , String.valueOf(ConfigManager.getInstance().getCommandsCount())});
+        newEntry.add(new String[]{"command", commandMode.name()});
+        newEntry.add(new String[]{"result" , result});
+        jsonHandler.addArrayEntry(newEntry);
+        ConfigManager.getInstance().incrementCommandsCount();
     }
 }

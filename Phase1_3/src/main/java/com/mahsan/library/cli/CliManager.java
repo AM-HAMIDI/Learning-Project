@@ -37,8 +37,8 @@ public class CliManager {
         }
     }
 
-    public void showInputError(){
-        System.out.println("Invalid input!");
+    public String getInputError(){
+        return "Invalid input!";
     }
 
     public String getInputTitle(){

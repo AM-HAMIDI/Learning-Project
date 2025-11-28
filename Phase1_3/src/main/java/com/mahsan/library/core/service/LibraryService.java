@@ -18,8 +18,7 @@ public class LibraryService {
         this.library = library;
     }
 
-    public void initializeLibrary(String bookListsFilePath){
-        String bookListsAbsoluteFilePath = ConfigManager.getProjectRootPath() + bookListsFilePath;
+    public void initializeLibrary(String bookListsAbsoluteFilePath){
         JsonHandler jsonHandler = new JsonHandler(bookListsAbsoluteFilePath);
         if(!jsonHandler.isJsonFileValid()){
             System.out.println("book lists file is not valid");
@@ -53,8 +52,8 @@ public class LibraryService {
         }
     }
 
-    public void printBooksList(){
-        library.getBooks().printList();
+    public String getBooksStringList(){
+        return library.getBooks().getStringList();
     }
 
     public Book searchBooksByTitle(String title){

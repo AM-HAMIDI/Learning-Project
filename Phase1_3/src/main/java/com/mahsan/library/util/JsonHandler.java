@@ -75,12 +75,27 @@ public class JsonHandler {
     }
 
     public ArrayList<JsonNode> getArrayElements(){
-        if(!isJsonFileValid) return new ArrayList<>();
-        if(!rootJsonNode.isArray()) return new ArrayList<>();
+        if(!isJsonFileValid || !rootJsonNode.isArray()) return new ArrayList<>();
         ArrayList<JsonNode> elements = new ArrayList<>();
         for(JsonNode jsonNode : rootJsonNode){
             elements.add(jsonNode);
         }
         return elements;
+    }
+
+    public void addArrayEntry(ArrayList<String[]> newEntry) {
+        try {
+            if (!isJsonFileValid || !rootJsonNode.isArray())
+                rootJsonNode = objectMapper.createArrayNode();
+
+            ObjectNode entry = objectMapper.createObjectNode();
+            for(var property : newEntry){
+                entry.put(property[0] , property[1]);
+            }
+
+            ((com.fasterxml.jackson.databind.node.ArrayNode) rootJsonNode).add(entry);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, rootJsonNode);
+
+        } catch (Exception e) {}
     }
 }

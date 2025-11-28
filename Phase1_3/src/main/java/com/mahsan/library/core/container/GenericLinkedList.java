@@ -49,12 +49,14 @@ public class GenericLinkedList<T> {
 
     }
 
-    public void printList(){
+    public String getStringList(){
+        StringBuilder list = new StringBuilder();
         GenericNode<T> node = headNode;
         while(node != null){
-            System.out.println(node);
+            list.append(node).append("\n");
             node = node.getNextNode();
         }
+        return list.toString();
     }
 
     private void incrementSize(){

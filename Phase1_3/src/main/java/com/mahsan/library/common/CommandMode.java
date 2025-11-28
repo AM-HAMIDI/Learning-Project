@@ -28,14 +28,6 @@ public enum CommandMode {
         return commandModes;
     }
 
-    public static boolean isTerminalCommandMode(CommandMode commandMode){
-        return commandMode == EXIT;
-    }
-
-    public static boolean isInvalidCommand(CommandMode commandMode){
-        return commandMode == INVALID_COMMAND;
-    }
-
     public static CommandMode getFromInt(int commandIndex){
         if(commandIndex < 1 || commandIndex > 8) return INVALID_COMMAND;
         else return values()[commandIndex];
