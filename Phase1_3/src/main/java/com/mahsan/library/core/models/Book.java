@@ -1,6 +1,6 @@
-package com.mahsan.library.Modules;
+package com.mahsan.library.core.models;
 
-import com.mahsan.library.Common.Status;
+import com.mahsan.library.common.Status;
 import java.util.Objects;
 
 public class Book {
