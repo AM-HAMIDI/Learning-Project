@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-    private static ConfigManager configManager;
+    private static ConfigManager configManager = ConfigManager.getInstance();
     private static CliManager cliManager = new CliManager();
     private static Library library = new Library();
     private static LibraryService libraryService = new LibraryService(library);
@@ -21,6 +21,7 @@ public class Main {
     }
 
     public static void startSystem(){
+        libraryService.initializeLibrary(configManager.getBooksListsFilePath());
         cliManager.showUI();
         while(true){
             CommandMode commandMode = cliManager.getCommandMode();

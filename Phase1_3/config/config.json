@@ -1,4 +1,4 @@
 {
-  "BookListsDirPath" : "/data/BookLists.json",
+  "BookListsFilePath" : "/data/BookLists.json",
   "CommandHistory" : "/data/CommandHistory.json"
 }

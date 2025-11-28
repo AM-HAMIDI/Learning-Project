@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class JsonHandler {
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -16,27 +17,19 @@ public class JsonHandler {
 
     public JsonHandler(String fileAbsolutePath){
         file = new File(fileAbsolutePath);
-        if(!file.exists()){
-            if(createJsonFile())
-                System.out.println(file.getName() + " has been created!");
-            else
-                System.out.println(file.getName() + " could not be created!");
-        }
+        if(!file.exists()) createJsonFile();
         rootJsonNode = readJsonFile();
-        if(rootJsonNode == null){
-            System.out.println(file.getName() + " is not valid json file!");
-            isJsonFileValid = false;
-        } else
-            isJsonFileValid = true;
+        isJsonFileValid = rootJsonNode != null;
     }
 
-    private boolean createJsonFile(){
+    public boolean isJsonFileValid(){
+        return isJsonFileValid;
+    }
+
+    private void createJsonFile(){
         try {
-            return file.createNewFile();
-        } catch (IOException exception){
-            System.out.println(exception);
-            return false;
-        }
+            file.createNewFile();
+        } catch (IOException _){}
     }
 
     private JsonNode readJsonFile(){
@@ -52,6 +45,10 @@ public class JsonHandler {
         return rootJsonNode.get(key).asText();
     }
 
+    public static String getProperty(JsonNode jsonNode , String key){
+        return jsonNode.get(key).asText();
+    }
+
     public void setProperty(String key , String value){
         if(!isJsonFileValid) return;
         JsonNode valueNode = objectMapper.valueToTree(value);
@@ -63,5 +60,27 @@ public class JsonHandler {
         }catch (IOException exception){
             System.out.println("property can't be set!");
         }
+    }
+
+    public static void setProperty(JsonNode jsonNode , File file , String key , String value){
+        JsonNode valueNode = objectMapper.valueToTree(value);
+        if(jsonNode instanceof ObjectNode objectNode){
+            objectNode.set(key , valueNode);
+        }
+        try {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(file , jsonNode);
+        }catch (IOException exception){
+            System.out.println("property can't be set!");
+        }
+    }
+
+    public ArrayList<JsonNode> getArrayElements(){
+        if(!isJsonFileValid) return new ArrayList<>();
+        if(!rootJsonNode.isArray()) return new ArrayList<>();
+        ArrayList<JsonNode> elements = new ArrayList<>();
+        for(JsonNode jsonNode : rootJsonNode){
+            elements.add(jsonNode);
+        }
+        return elements;
     }
 }
