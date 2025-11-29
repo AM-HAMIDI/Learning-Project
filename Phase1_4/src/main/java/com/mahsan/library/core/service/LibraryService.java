@@ -43,9 +43,10 @@ public class LibraryService {
     }
 
     public void updateBook(Book book , Status status){
+        Book oldBook = new Book(book.getTitle() , book.getAuthor() , book.getReleaseYear() , book.getStatus());
         GenericNode<Book> node = library.getBooks().getHeadNode();
         while(node != null){
-            if(node.getData().equals(book)) node.getData().setStatus(status);
+            if(node.getData().equals(oldBook)) node.getData().setStatus(status);
             node = node.getNextNode();
         }
     }

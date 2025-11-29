@@ -147,12 +147,24 @@ public class LibraryServiceTest {
 
     @Test
     public void testUpdateBook(){
-        Book book = new Book("book1", "author1", 1, Status.EXIST);
-        libraryService.insertBook(book);
-        assertEquals(book , library.getBooks().getHeadNode().getData());
-        libraryService.updateBook(book , Status.BANNED);
+        Book book1 = new Book("book1", "author1", 1, Status.EXIST);
+        Book book2 = new Book("book2", "author1", 12, Status.BANNED);
+        Book book3 = new Book("book1", "author1", 1, Status.EXIST);
+        libraryService.insertBook(book1);
+        libraryService.insertBook(book2);
+        libraryService.insertBook(book3);
+
+        ArrayList<Book> books = library.getBooks().getKeysArrayList();
+        assertEquals(book1 , books.get(0));
+        assertEquals(book2 , books.get(1));
+        assertEquals(book3 , books.get(2));
+
+        libraryService.updateBook(new Book("book1", "author1", 1, Status.EXIST) , Status.BANNED);
         Book updatedBook = new Book("book1", "author1", 1, Status.BANNED);
-        assertEquals( updatedBook , library.getBooks().getHeadNode().getData());
+
+        ArrayList<Book> updatedBooks = library.getBooks().getKeysArrayList();
+        assertEquals(updatedBook , updatedBooks.get(0));
+        assertEquals(updatedBook , updatedBooks.get(2));
     }
 
     @Test
