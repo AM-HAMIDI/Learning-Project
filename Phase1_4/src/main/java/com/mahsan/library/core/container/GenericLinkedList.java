@@ -68,6 +68,10 @@ public class GenericLinkedList<T> {
         if(size >= 1) size -= 1;
     }
 
+    public int getSize(){
+        return size;
+    }
+
     public boolean isEmpty(){
         return size == 0;
     }

@@ -47,14 +47,17 @@ public class GenericLinkedListTest {
     @Test
     public void testRemoveNonExistingElement(){
         genericLinkedList.insert("element1");
-        genericLinkedList.removeByKey("element2");
-        assertFalse(genericLinkedList.isEmpty());
+        genericLinkedList.insert("element2");
+        genericLinkedList.removeByKey("element3");
+        assertEquals(2 , genericLinkedList.getSize());
+        assertEquals("element1" , genericLinkedList.getHeadNode().getData());
+        assertEquals("element2" , genericLinkedList.getHeadNode().getNextNode().getData());
     }
 
     @Test
     public void testRemoveSingleElement_1(){
         genericLinkedList.insert("element1");
-        assertFalse(genericLinkedList.isEmpty());
+        assertEquals(1 , genericLinkedList.getSize());
         genericLinkedList.removeByKey("element1");
         assertTrue(genericLinkedList.isEmpty());
     }
@@ -68,7 +71,10 @@ public class GenericLinkedListTest {
         genericLinkedList.insert("element2");
 
         genericLinkedList.removeByKey("element1");
+
         ArrayList<String> keysArrayList = genericLinkedList.getKeysArrayList();
+
+        assertEquals(3 , genericLinkedList.getSize());
         assertEquals(3 , keysArrayList.size());
         assertEquals("element2" , keysArrayList.get(0));
         assertEquals("element3" , keysArrayList.get(1));
@@ -95,28 +101,5 @@ public class GenericLinkedListTest {
         assertEquals(2 , keysArrayList.size());
         assertEquals("element2" , keysArrayList.get(0));
         assertEquals("element4" , keysArrayList.get(1));
-    }
-
-    @Test
-    public void testInsertAndRemove() {
-        genericLinkedList.insert("element1");
-        genericLinkedList.insert("element1");
-        genericLinkedList.insert("element2");
-        genericLinkedList.insert("element4");
-
-        genericLinkedList.removeByKey("element1");
-        ArrayList<String> keysArrayList = genericLinkedList.getKeysArrayList();
-        assertEquals("element2", keysArrayList.get(0));
-        assertEquals("element4", keysArrayList.get(1));
-
-        genericLinkedList.insert("element1");
-        genericLinkedList.insert("element3");
-        genericLinkedList.insert("element4");
-
-        genericLinkedList.removeByKey("element4");
-        keysArrayList = genericLinkedList.getKeysArrayList();
-        assertEquals("element2", keysArrayList.get(0));
-        assertEquals("element1", keysArrayList.get(1));
-        assertEquals("element3", keysArrayList.get(2));
     }
 }

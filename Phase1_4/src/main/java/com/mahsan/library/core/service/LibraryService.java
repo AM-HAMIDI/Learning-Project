@@ -45,10 +45,8 @@ public class LibraryService {
     public void updateBook(Book book , Status status){
         GenericNode<Book> node = library.getBooks().getHeadNode();
         while(node != null){
-            if(node.getData().equals(book)){
-                node.getData().setStatus(status);
-                break;
-            }else node = node.getNextNode();
+            if(node.getData().equals(book)) node.getData().setStatus(status);
+            node = node.getNextNode();
         }
     }
 
