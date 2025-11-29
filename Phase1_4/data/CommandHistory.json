@@ -1,0 +1,13 @@
+[ {
+  "index" : "1",
+  "command" : "INSERT_BOOK",
+  "result" : "Book added successfully!\n"
+}, {
+  "index" : "2",
+  "command" : "INSERT_BOOK",
+  "result" : "status is invalid!\n"
+}, {
+  "index" : "3",
+  "command" : "EXIT",
+  "result" : "system is finished!\n"
+} ]
