@@ -1,3 +1,5 @@
+package com.mahsan.library.model;
+
 public class GenericLinkedList<T> {
     private GenericNode<T> headNode;
     private int size;

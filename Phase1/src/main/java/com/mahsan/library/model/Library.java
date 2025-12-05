@@ -1,3 +1,5 @@
+package com.mahsan.library.model;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -26,12 +28,14 @@ public class Library {
         }
     }
 
-    public void printBooksList(){
+    public String getBooksStringList(){
+        StringBuilder list = new StringBuilder();
         GenericNode<Book> node = books.getHeadNode();
         while(node != null){
-            System.out.println(node);
+            list.append(node).append("\n");
             node = node.getNextNode();
         }
+        return list.toString();
     }
 
     public Book searchBooksByTitle(String title){

@@ -1,9 +1,10 @@
+package com.mahsan.library.model;
+
 import java.util.Objects;
 
 public class GenericNode<T> {
     private T data;
     private GenericNode<T> nextNode;
-
     GenericNode(T data , GenericNode<T> nextNode){
         this.data = data;
         this.nextNode = nextNode;
