@@ -1,53 +1,71 @@
 import java.util.ArrayList;
 import java.util.Comparator;
 
-
 public class Library {
-    private ArrayList<Book> books;
+    private GenericLinkedList<Book> books;
 
     public Library(){
-        books = new ArrayList<>();
+        books = new GenericLinkedList<>();
     }
 
     public void insertBook(Book book){
-        books.add(book);
+        books.insert(book);
     }
 
     public void removeBook(Book book){
-        books.remove(book);
+        books.removeByKey(book);
     }
 
     public void updateBook(Book book , Status status){
-        int bookIndex = books.indexOf(book);
-        if(bookIndex != -1) books.get(bookIndex).setStatus(status);
+        GenericNode<Book> node = books.getHeadNode();
+        while(node != null){
+            if(node.getData().equals(book)){
+                node.getData().setStatus(status);
+                break;
+            }else node = node.getNextNode();
+        }
     }
 
     public void printBooksList(){
-        books.forEach(System.out::println);
+        GenericNode<Book> node = books.getHeadNode();
+        while(node != null){
+            System.out.println(node);
+            node = node.getNextNode();
+        }
     }
 
     public Book searchBooksByTitle(String title){
-        for(Book book : books){
-            if(book.getTitle().equals(title))
-                return book;
+        GenericNode<Book> node = books.getHeadNode();
+        while(node != null){
+            if(node.getData().getTitle().equals(title)) return node.getData();
+            else node = node.getNextNode();
         }
         return null;
     }
 
     public ArrayList<Book> searchBooksByAuthor(String author){
         ArrayList<Book> authorBooks = new ArrayList<>();
-
-        for(Book book : books){
-            if(book.getAuthor().equals(author))
-                authorBooks.add(book);
+        GenericNode<Book> node = books.getHeadNode();
+        while(node != null){
+            if(node.getData().getAuthor().equals(author)) authorBooks.add(node.getData());
+            node = node.getNextNode();
         }
-
         return authorBooks;
     }
 
     public ArrayList<Book> sortBooksByReleaseYear(){
-        ArrayList<Book> sortedBooks = new ArrayList<>(books);
+        ArrayList<Book> sortedBooks = getBooksArrayList();
         sortedBooks.sort(Comparator.comparingInt(Book::getReleaseYear));
         return sortedBooks;
+    }
+
+    private ArrayList<Book> getBooksArrayList(){
+        ArrayList<Book> booksArrayList = new ArrayList<>();
+        GenericNode<Book> node = books.getHeadNode();
+        while(node != null){
+            booksArrayList.add(node.getData());
+            node = node.getNextNode();
+        }
+        return booksArrayList;
     }
 }

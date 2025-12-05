@@ -46,14 +46,6 @@ public class GenericLinkedList<T> {
 
     }
 
-    public void printList(){
-        GenericNode<T> node = headNode;
-        while(node != null){
-            System.out.println(node);
-            node = node.getNextNode();
-        }
-    }
-
     public GenericNode<T> getHeadNode(){
         return headNode;
     }
@@ -80,16 +72,6 @@ public class GenericLinkedList<T> {
             node = node.getNextNode();
         }
         return node;
-    }
-
-    public ArrayList<T> getKeysArrayList(){
-        ArrayList<T> keysArrayList = new ArrayList<>();
-        GenericNode<T> node = headNode;
-        while(node != null){
-            keysArrayList.add(node.getData());
-            node = node.getNextNode();
-        }
-        return keysArrayList;
     }
 }
 
