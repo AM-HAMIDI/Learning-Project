@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.Objects;
-
 public class GenericLinkedList<T> {
     private GenericNode<T> headNode;
     private int size;
