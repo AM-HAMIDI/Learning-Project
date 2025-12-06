@@ -19,12 +19,11 @@ public class Library {
     }
 
     public void updateBook(Book book , Status status){
+        Book oldBook = new Book(book.getTitle() , book.getAuthor() , book.getReleaseYear() , book.getStatus());
         GenericNode<Book> node = books.getHeadNode();
         while(node != null){
-            if(node.getData().equals(book)){
-                node.getData().setStatus(status);
-                break;
-            }else node = node.getNextNode();
+            if(node.getData().equals(oldBook)) node.getData().setStatus(status);
+            node = node.getNextNode();
         }
     }
 
@@ -63,7 +62,11 @@ public class Library {
         return sortedBooks;
     }
 
-    private ArrayList<Book> getBooksArrayList(){
+    public GenericLinkedList<Book> getBooks(){
+        return books;
+    }
+
+    public ArrayList<Book> getBooksArrayList(){
         ArrayList<Book> booksArrayList = new ArrayList<>();
         GenericNode<Book> node = books.getHeadNode();
         while(node != null){

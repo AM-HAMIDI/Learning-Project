@@ -10,14 +10,13 @@ public class GenericLinkedList<T> {
     }
 
     public void insert(T data){
-        if(isEmpty()){
+        if(isEmpty())
             headNode = new GenericNode<>(data , null);
-            incrementSize();
-        }
         else {
             GenericNode<T> newNode = new GenericNode<>(data , null);
             findTailNode().setNextNode(newNode);
         }
+        incrementSize();
     }
 
     public void removeByKey(T key){
@@ -27,6 +26,8 @@ public class GenericLinkedList<T> {
             headNode = headNode.getNextNode();
             decrementSize();
         }
+
+        if(headNode == null) return;
 
         GenericNode<T> prevNode = headNode;
         GenericNode<T> node = headNode.getNextNode();
@@ -42,11 +43,14 @@ public class GenericLinkedList<T> {
                 node = node.getNextNode();
             }
         }
-
     }
 
-    public GenericNode<T> getHeadNode(){
-        return headNode;
+    private void incrementSize(){
+        size += 1;
+    }
+
+    private void decrementSize(){
+        if(size >= 1) size -= 1;
     }
 
     public int getSize(){
@@ -57,12 +61,8 @@ public class GenericLinkedList<T> {
         return size == 0;
     }
 
-    private void incrementSize(){
-        size += 1;
-    }
-
-    private void decrementSize(){
-        if(size >= 1) size -= 1;
+    public GenericNode<T> getHeadNode(){
+        return headNode;
     }
 
     private GenericNode<T> findTailNode(){
