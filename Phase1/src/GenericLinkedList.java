@@ -29,6 +29,8 @@ public class GenericLinkedList<T> {
             decrementSize();
         }
 
+        if(headNode == null) return;
+
         GenericNode<T> prevNode = headNode;
         GenericNode<T> node = headNode.getNextNode();
 
@@ -43,7 +45,6 @@ public class GenericLinkedList<T> {
                 node = node.getNextNode();
             }
         }
-
     }
 
     public GenericNode<T> getHeadNode(){
