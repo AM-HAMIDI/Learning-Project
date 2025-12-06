@@ -18,8 +18,12 @@ public class Library {
     }
 
     public void updateBook(Book book , Status status){
-        int bookIndex = books.indexOf(book);
-        if(bookIndex != -1) books.get(bookIndex).setStatus(status);
+        Book oldBook = new Book(book.getTitle() , book.getAuthor() , book.getReleaseYear() , book.getStatus());
+        GenericNode<Book> node = books.getHeadNode();
+        while(node != null){
+            if(node.getData().equals(oldBook)) node.getData().setStatus(status);
+            node = node.getNextNode();
+        }
     }
 
     public void printBooksList(){
