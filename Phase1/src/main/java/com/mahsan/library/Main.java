@@ -13,10 +13,10 @@ public class Main {
     private static final String projectRootPath = System.getProperty("user.dir");
     private static final String configFilePath = projectRootPath + "/config/config.json";
     private static final JsonHandler configJsonHandler = new JsonHandler(configFilePath);
-    private static final String commandHistoryFilePath = projectRootPath + configJsonHandler.getProperty("CommandHistory");
-    private static final JsonHandler commandHistoryJsonHandler = new JsonHandler(commandHistoryFilePath);
-    private static final String bookListFilePath = projectRootPath + configJsonHandler.getProperty("BookListsFilePath");
-    private static final JsonHandler libraryJsonHandler = new JsonHandler(bookListFilePath);
+    private static String commandHistoryFilePath;
+    private static JsonHandler commandHistoryJsonHandler;
+    private static String libraryFilePath;
+    private static JsonHandler libraryJsonHandler;
 
     private static boolean isSystemRunning = true;
     private static int commandsCount = 1;
@@ -24,26 +24,37 @@ public class Main {
     private static Library library = new Library();
 
     public static void main(String[] args) {
-        cleanCommandHistoryFile();
-        initializeLibrary();
+        if(!initializeSystem()) return;
         cliManager.showUI();
         while(isSystemRunning){
             processCommand(cliManager.getCommandMode());
         }
     }
 
-    private static void cleanCommandHistoryFile(){
+    public static boolean initializeSystem(){
+        if(!configJsonHandler.isJsonFileValid()) return false;
+        commandHistoryFilePath = projectRootPath + configJsonHandler.getProperty("CommandHistory");
+        if(!initializeCommandHistory()) return false;
+        commandHistoryJsonHandler = new JsonHandler(commandHistoryFilePath);
+        libraryFilePath = projectRootPath + configJsonHandler.getProperty("BookListsFilePath");
+        libraryJsonHandler = new JsonHandler(libraryFilePath);
+        return initializeLibrary();
+    }
+
+    private static boolean initializeCommandHistory(){
         try{
             PrintWriter printWriter = new PrintWriter(commandHistoryFilePath);
             printWriter.write("");
             printWriter.close();
-        }catch (IOException exception){}
+            return true;
+        }catch (IOException exception){
+            return false;
+        }
     }
-
-    private static void initializeLibrary(){
+    private static boolean initializeLibrary(){
         if(!libraryJsonHandler.isJsonFileValid()){
             System.out.println("book lists file is not valid");
-            return;
+            return false;
         }
         ArrayList<JsonNode> jsonNodes = libraryJsonHandler.getArrayElements();
         for(JsonNode jsonNode : jsonNodes){
@@ -53,6 +64,7 @@ public class Main {
             Status status = Status.getStatus(JsonHandler.getProperty(jsonNode , "status"));
             library.insertBook(new Book(title , author , releaseYear , status));
         }
+        return true;
     }
 
     private static void processCommand(CommandMode commandMode){
