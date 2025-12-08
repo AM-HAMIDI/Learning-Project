@@ -1,8 +1,8 @@
 package com.mahsan.library.core;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.mahsan.library.Main;
 import com.mahsan.library.cli.*;
+import com.mahsan.library.config.ConfigResolver;
 import com.mahsan.library.model.*;
 import com.mahsan.library.io.*;
 
@@ -11,7 +11,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class SystemManager {
-    private final String configFilePath = Main.projectRootPath + "/config/config.json";
+    private final String configFilePath = ConfigResolver.getConfigFilePath();
     private final JsonHandler configJsonHandler = new JsonHandler(configFilePath);
     private String commandHistoryFilePath, libraryFilePath;
     private JsonHandler commandHistoryJsonHandler, libraryJsonHandler;
@@ -25,11 +25,11 @@ public class SystemManager {
     public void initializeSystem() {
         if (!configJsonHandler.isJsonFileValid())
             isSystemInitialized = false;
-        commandHistoryFilePath = Main.projectRootPath + configJsonHandler.getProperty("CommandHistory");
+        commandHistoryFilePath = ConfigResolver.resolve(configJsonHandler.getProperty("CommandHistory"));
         if (!initializeCommandHistory())
             isSystemInitialized = false;
         commandHistoryJsonHandler = new JsonHandler(commandHistoryFilePath);
-        libraryFilePath = Main.projectRootPath + configJsonHandler.getProperty("BookListsFilePath");
+        libraryFilePath = ConfigResolver.resolve(configJsonHandler.getProperty("BookListsFilePath"));
         libraryJsonHandler = new JsonHandler(libraryFilePath);
         if (!initializeLibrary())
             isSystemInitialized = false;
