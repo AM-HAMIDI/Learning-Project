@@ -2,7 +2,7 @@ package com.mahsan.library.model;
 
 import java.util.Objects;
 
-public class Reference extends LibraryItem{
+public class Reference extends LibraryItem implements HasPublisher{
     private final String category;
     private final String publisher;
 

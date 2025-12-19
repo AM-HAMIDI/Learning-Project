@@ -2,7 +2,7 @@ package com.mahsan.library.model;
 
 import java.util.Objects;
 
-public class Magazine extends LibraryItem {
+public class Magazine extends LibraryItem implements HasPublisher{
 
     private final int issueNumber;
     private final String publisher;

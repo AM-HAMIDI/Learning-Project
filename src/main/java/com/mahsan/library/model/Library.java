@@ -4,21 +4,21 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Library {
-    private GenericLinkedList<Book> books;
+    private GenericLinkedList<LibraryItem> libraryItems;
 
     public Library() {
-        books = new GenericLinkedList<>();
+        libraryItems = new GenericLinkedList<>();
     }
 
-    public void insertBook(Book book) {
-        books.insert(book);
+    public void insertLibraryItem(LibraryItem libraryItem) {
+        libraryItems.insert(libraryItem);
     }
 
-    public void removeBook(Book book) {
-        books.removeByKey(book);
+    public void removeLibraryItem(LibraryItem libraryItem) {
+        libraryItems.removeByKey(libraryItem);
     }
 
-    public void updateBook(Book book, Status status) {
+    public void updateLibraryItem(LibraryItem libraryItem, Status status) {
         Book oldBook = new Book(book.getTitle(), book.getAuthor(), book.getReleaseYear(), book.getStatus());
         GenericNode<Book> node = books.getHeadNode();
         while (node != null) {
@@ -38,15 +38,16 @@ public class Library {
         return list.toString();
     }
 
-    public Book searchBooksByTitle(String title) {
-        GenericNode<Book> node = books.getHeadNode();
+    public ArrayList<LibraryItem> searchLibraryItemsByTitle(String title) {
+        GenericNode<LibraryItem> node = libraryItems.getHeadNode();
+        ArrayList<LibraryItem> targetLibraryItems = new ArrayList<>();
         while (node != null) {
             if (node.getData().getTitle().equals(title))
-                return node.getData();
+                targetLibraryItems.add(node.getData());
             else
                 node = node.getNextNode();
         }
-        return null;
+        return targetLibraryItems;
     }
 
     public ArrayList<Book> searchBooksByAuthor(String author) {

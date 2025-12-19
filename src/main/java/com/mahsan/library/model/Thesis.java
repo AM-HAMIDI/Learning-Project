@@ -2,7 +2,7 @@ package com.mahsan.library.model;
 
 import java.util.Objects;
 
-public class Thesis extends LibraryItem {
+public class Thesis extends LibraryItem implements HasAuthor{
     private final String author;
     private final int defenseYear;
 
