@@ -4,13 +4,13 @@ import java.util.Arrays;
 
 public enum CommandMode {
     INVALID_COMMAND("Invalid command"),
-    INSERT_BOOK("Insert book"),
-    REMOVE_BOOK("Remove book"),
-    UPDATE_BOOK("Update book"),
-    PRINT_BOOKS_LIST("Print books list"),
-    SEARCH_BOOKS_BY_TITLE("Search books by title"),
-    SEARCH_BOOKS_BY_AUTHOR("Search books by author"),
-    SORT_BOOKS("Sort books by release year"),
+    HELP("Help"),
+    INSERT("Insert"),
+    REMOVE("Remove"),
+    UPDATE("Update"),
+    PRINT_LIST("Print list"),
+    SEARCH("Search"),
+    SORT("Sort"),
     EXIT("Exit");
 
     private final String commandStr;

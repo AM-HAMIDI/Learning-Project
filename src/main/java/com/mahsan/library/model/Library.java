@@ -2,6 +2,7 @@ package com.mahsan.library.model;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.function.Predicate;
 
 public class Library {
     private GenericLinkedList<LibraryItem> libraryItems;
@@ -19,65 +20,54 @@ public class Library {
     }
 
     public void updateLibraryItem(LibraryItem libraryItem, Status status) {
-        Book oldBook = new Book(book.getTitle(), book.getAuthor(), book.getReleaseYear(), book.getStatus());
-        GenericNode<Book> node = books.getHeadNode();
+        GenericNode<LibraryItem> node = libraryItems.getHeadNode();
         while (node != null) {
-            if (node.getData().equals(oldBook))
+            if (node.getData().equals(libraryItem))
                 node.getData().setStatus(status);
             node = node.getNextNode();
         }
     }
 
-    public String getBooksStringList() {
-        StringBuilder list = new StringBuilder();
-        GenericNode<Book> node = books.getHeadNode();
+    public String getItemsStringList(Predicate<LibraryItem> filter) {
+        StringBuilder itemsStringBuilder = new StringBuilder();
+        GenericNode<LibraryItem> node = libraryItems.getHeadNode();
         while (node != null) {
-            list.append(node).append("\n");
+            LibraryItem item = node.getData();
+            if (filter.test(item))
+                itemsStringBuilder.append(item).append("\n");
             node = node.getNextNode();
         }
-        return list.toString();
+
+        return itemsStringBuilder.toString();
     }
 
-    public ArrayList<LibraryItem> searchLibraryItemsByTitle(String title) {
+    public ArrayList<LibraryItem> searchItems(Predicate<LibraryItem> filter){
         GenericNode<LibraryItem> node = libraryItems.getHeadNode();
         ArrayList<LibraryItem> targetLibraryItems = new ArrayList<>();
         while (node != null) {
-            if (node.getData().getTitle().equals(title))
-                targetLibraryItems.add(node.getData());
-            else
-                node = node.getNextNode();
+            LibraryItem item = node.getData();
+            if(filter.test(item))
+                targetLibraryItems.add(item);
+            node = node.getNextNode();
         }
         return targetLibraryItems;
     }
 
-    public ArrayList<Book> searchBooksByAuthor(String author) {
-        ArrayList<Book> authorBooks = new ArrayList<>();
-        GenericNode<Book> node = books.getHeadNode();
-        while (node != null) {
-            if (node.getData().getAuthor().equals(author))
-                authorBooks.add(node.getData());
+    public ArrayList<LibraryItem> sortItems(Predicate<LibraryItem> filter , Comparator<LibraryItem> comparator){
+        ArrayList<LibraryItem> items = searchItems(filter);
+        items.sort(comparator);
+        return items;
+    }
+
+    public GenericLinkedList<LibraryItem> getItems(Predicate<LibraryItem> filter){
+        GenericLinkedList<LibraryItem> items = new GenericLinkedList<>();
+        GenericNode<LibraryItem> node = libraryItems.getHeadNode();
+        while(node != null){
+            LibraryItem item = node.getData();
+            if(filter.test(item))
+                items.insert(item);
             node = node.getNextNode();
         }
-        return authorBooks;
-    }
-
-    public ArrayList<Book> sortBooksByReleaseYear() {
-        ArrayList<Book> sortedBooks = getBooksArrayList();
-        sortedBooks.sort(Comparator.comparingInt(Book::getReleaseYear));
-        return sortedBooks;
-    }
-
-    public GenericLinkedList<Book> getBooks() {
-        return books;
-    }
-
-    public ArrayList<Book> getBooksArrayList() {
-        ArrayList<Book> booksArrayList = new ArrayList<>();
-        GenericNode<Book> node = books.getHeadNode();
-        while (node != null) {
-            booksArrayList.add(node.getData());
-            node = node.getNextNode();
-        }
-        return booksArrayList;
+        return items;
     }
 }

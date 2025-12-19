@@ -1,7 +1,6 @@
 package com.mahsan.library.cli;
 
 import com.mahsan.library.model.Status;
-
 import java.util.Scanner;
 
 public class CliManager {
@@ -40,18 +39,13 @@ public class CliManager {
         return "Invalid input!";
     }
 
-    public String getInputTitle() {
-        System.out.println("\nEnter book's title : ");
+    public String getInputString(String ui){
+        System.out.println("\n" + ui);
         return scanner.nextLine().trim();
     }
 
-    public String getInputAuthor() {
-        System.out.println("\nEnter book's author : ");
-        return scanner.nextLine().trim();
-    }
-
-    public int getInputReleaseYear() {
-        System.out.println("\nEnter book's release year : ");
+    public int getInputInteger(String ui){
+        System.out.println("\n" + ui);
         String releaseYearStr = scanner.nextLine().trim();
         try {
             return Integer.parseInt(releaseYearStr);
