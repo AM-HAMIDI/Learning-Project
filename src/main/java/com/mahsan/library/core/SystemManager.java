@@ -50,18 +50,60 @@ public class SystemManager {
 
     private boolean initializeLibrary() {
         if (!libraryJsonHandler.isJsonFileValid()) {
-            System.out.println("book lists file is not valid");
+            System.out.println("library file is not valid");
             return false;
         }
         ArrayList<JsonNode> jsonNodes = libraryJsonHandler.getArrayElements();
         for (JsonNode jsonNode : jsonNodes) {
-            String title = JsonHandler.getProperty(jsonNode, "title");
-            String author = JsonHandler.getProperty(jsonNode, "author");
-            int releaseYear = Integer.parseInt(JsonHandler.getProperty(jsonNode, "releaseYear"));
-            Status status = Status.getStatus(JsonHandler.getProperty(jsonNode, "status"));
-            library.insertBook(new Book(title, author, releaseYear, status));
+            String type = JsonHandler.getProperty(jsonNode , "type");
+            library.insertLibraryItem(getNewLibraryItemFromJson(type , jsonNode));
         }
         return true;
+    }
+
+    private LibraryItem getNewLibraryItemFromJson(String type , JsonNode jsonNode){
+        switch (type) {
+            case "Book":
+                return getNewBookFromJson(jsonNode);
+            case "Magazine":
+                return getNewMagazineFromJson(jsonNode);
+            case "Reference":
+                return getNewReferenceFromJson(jsonNode);
+            case "Thesis":
+                return getNewThesisFromJson(jsonNode);
+        }
+    }
+
+    private Book getNewBookFromJson(JsonNode jsonNode){
+        String title = JsonHandler.getProperty(jsonNode, "title");
+        String author = JsonHandler.getProperty(jsonNode, "author");
+        int releaseYear = Integer.parseInt(JsonHandler.getProperty(jsonNode, "releaseYear"));
+        Status status = Status.getStatus(JsonHandler.getProperty(jsonNode, "status"));
+        return new Book(title , author , releaseYear , status);
+    }
+
+    private Magazine getNewMagazineFromJson(JsonNode jsonNode){
+        String title = JsonHandler.getProperty(jsonNode , "title");
+        int issueNumber = Integer.parseInt(JsonHandler.getProperty(jsonNode, "issueNumber"));
+        String publisher = JsonHandler.getProperty(jsonNode , "publisher");
+        Status status = Status.getStatus(JsonHandler.getProperty(jsonNode, "status"));
+        return new Magazine(title , issueNumber , publisher , status);
+    }
+
+    private Reference getNewReferenceFromJson(JsonNode jsonNode){
+        String title = JsonHandler.getProperty(jsonNode , "title");
+        String category = JsonHandler.getProperty(jsonNode , "category");
+        String publisher = JsonHandler.getProperty(jsonNode , "publisher");
+        Status status = Status.getStatus(JsonHandler.getProperty(jsonNode, "status"));
+        return new Reference(title , category , publisher , status);
+    }
+
+    private Thesis getNewThesisFromJson(JsonNode jsonNode){
+        String title = JsonHandler.getProperty(jsonNode, "title");
+        String author = JsonHandler.getProperty(jsonNode, "author");
+        int defenseYear = Integer.parseInt(JsonHandler.getProperty(jsonNode, "defenseYear"));
+        Status status = Status.getStatus(JsonHandler.getProperty(jsonNode, "status"));
+        return new Thesis(title , author , defenseYear , status);
     }
 
     public void startSystem() {
