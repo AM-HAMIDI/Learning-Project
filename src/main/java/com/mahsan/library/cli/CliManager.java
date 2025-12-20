@@ -1,5 +1,6 @@
 package com.mahsan.library.cli;
 
+import com.mahsan.library.model.LibraryItemType;
 import com.mahsan.library.model.Status;
 import java.util.Scanner;
 
@@ -8,7 +9,7 @@ public class CliManager {
 
     public void showUI() {
         String title = getTitle();
-        String options = getOptions();
+        String options = getCommandModeOptions();
         System.out.println("\n" + title + "\n" + options);
     }
 
@@ -16,13 +17,22 @@ public class CliManager {
         return "-".repeat(50) + " Library Management System " + "-".repeat(50);
     }
 
-    private String getOptions() {
+    public String getCommandModeOptions() {
         StringBuilder options = new StringBuilder();
         for (int i = 0; i < CommandMode.getCommandModes().length; i++) {
             options.append("[%d]".formatted(i + 1));
             options.append(CommandMode.getCommandModes()[i].getCommandStr()).append("\n");
         }
         return options.toString();
+    }
+
+    public String getLibraryItemTypeOptions(){
+        StringBuilder typeOptions = new StringBuilder();
+        for (int i = 0; i < LibraryItemType.getItemTypes().length; i++) {
+            typeOptions.append("[%d]".formatted(i + 1));
+            typeOptions.append(LibraryItemType.getItemTypes()[i].getTypeStr()).append("\n");
+        }
+        return typeOptions.toString();
     }
 
     public CommandMode getCommandMode() {
@@ -35,17 +45,27 @@ public class CliManager {
         }
     }
 
+    public LibraryItemType getLibraryItemTypeOption() {
+        System.out.println("Choose a type [1-5]");
+        String input = scanner.nextLine().trim();
+        try {
+            return LibraryItemType.getFromInt(Integer.parseInt(input));
+        } catch (NumberFormatException exception){
+            return LibraryItemType.INVALID_TYPE;
+        }
+    }
+
     public String getInputError() {
         return "Invalid input!";
     }
 
-    public String getInputString(String ui){
-        System.out.println("\n" + ui);
+    public String getInputString(String field){
+        System.out.println("\nEnter " + field + " : ");
         return scanner.nextLine().trim();
     }
 
-    public int getInputInteger(String ui){
-        System.out.println("\n" + ui);
+    public int getInputInteger(String field){
+        System.out.println("\nEnter " + field + " : ");
         String releaseYearStr = scanner.nextLine().trim();
         try {
             return Integer.parseInt(releaseYearStr);

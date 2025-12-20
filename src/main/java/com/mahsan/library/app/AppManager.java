@@ -1,4 +1,4 @@
-package com.mahsan.library.core;
+package com.mahsan.library.app;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mahsan.library.cli.*;
@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-public class SystemManager {
+public class AppManager {
     private final String configFilePath = ConfigResolver.getConfigFilePath();
     private final JsonHandler configJsonHandler = new JsonHandler(configFilePath);
     private String commandHistoryFilePath, libraryFilePath;
@@ -20,7 +20,7 @@ public class SystemManager {
     private int commandsCount = 0;
     private CliManager cliManager = new CliManager();
     private Library library = new Library();
-    private SystemProcessor systemProcessor;
+    private AppHandler systemProcessor;
 
     public void initializeSystem() {
         if (!configJsonHandler.isJsonFileValid())
@@ -33,7 +33,7 @@ public class SystemManager {
         libraryJsonHandler = new JsonHandler(libraryFilePath);
         if (!initializeLibrary())
             isSystemInitialized = false;
-        systemProcessor = new SystemProcessor(this, cliManager, library);
+        systemProcessor = new AppHandler(this, cliManager, library);
         isSystemInitialized = true;
     }
 
@@ -61,17 +61,41 @@ public class SystemManager {
         return true;
     }
 
-    private LibraryItem getNewLibraryItemFromJson(String type , JsonNode jsonNode){
-        switch (type) {
-            case "Book":
-                return getNewBookFromJson(jsonNode);
-            case "Magazine":
-                return getNewMagazineFromJson(jsonNode);
-            case "Reference":
-                return getNewReferenceFromJson(jsonNode);
-            case "Thesis":
-                return getNewThesisFromJson(jsonNode);
+    public void startSystem() {
+        if (!isSystemInitialized)
+            return;
+        isSystemRunning = true;
+        cliManager.showUI();
+        while (isSystemRunning) {
+            commandsCount++;
+            systemProcessor.processCommand(cliManager.getCommandMode());
         }
+    }
+
+    protected void finishSystem() {
+        isSystemRunning = false;
+    }
+
+    protected void AddToCommandHistory(CommandMode commandMode, String result) {
+        ArrayList<String[]> newEntry = new ArrayList<>();
+        newEntry.add(new String[] { "index", String.valueOf(commandsCount) });
+        newEntry.add(new String[] { "command", commandMode.name() });
+        newEntry.add(new String[] { "result", result });
+        commandHistoryJsonHandler.addArrayEntry(newEntry);
+    }
+
+    protected void showCommandResult(String result){
+        System.out.println(result);
+    }
+
+    private LibraryItem getNewLibraryItemFromJson(String type , JsonNode jsonNode){
+        return switch (type) {
+            case "Book" -> getNewBookFromJson(jsonNode);
+            case "Magazine" -> getNewMagazineFromJson(jsonNode);
+            case "Reference" -> getNewReferenceFromJson(jsonNode);
+            case "Thesis" -> getNewThesisFromJson(jsonNode);
+            default -> null;
+        };
     }
 
     private Book getNewBookFromJson(JsonNode jsonNode){
@@ -104,28 +128,5 @@ public class SystemManager {
         int defenseYear = Integer.parseInt(JsonHandler.getProperty(jsonNode, "defenseYear"));
         Status status = Status.getStatus(JsonHandler.getProperty(jsonNode, "status"));
         return new Thesis(title , author , defenseYear , status);
-    }
-
-    public void startSystem() {
-        if (!isSystemInitialized)
-            return;
-        isSystemRunning = true;
-        cliManager.showUI();
-        while (isSystemRunning) {
-            commandsCount++;
-            systemProcessor.processCommand(cliManager.getCommandMode());
-        }
-    }
-
-    protected void finishSystem() {
-        isSystemRunning = false;
-    }
-
-    protected void updateCommandHistory(CommandMode commandMode, String result) {
-        ArrayList<String[]> newEntry = new ArrayList<>();
-        newEntry.add(new String[] { "index", String.valueOf(commandsCount) });
-        newEntry.add(new String[] { "command", commandMode.name() });
-        newEntry.add(new String[] { "result", result });
-        commandHistoryJsonHandler.addArrayEntry(newEntry);
     }
 }

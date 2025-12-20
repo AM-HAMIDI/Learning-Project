@@ -1,16 +1,16 @@
-package com.mahsan.library.core;
+package com.mahsan.library.app;
 
 import com.mahsan.library.cli.*;
 import com.mahsan.library.model.*;
 
 import java.util.ArrayList;
 
-public class SystemProcessor {
-    private SystemManager systemManager;
+public class AppHandler {
+    private AppManager systemManager;
     private CliManager cliManager;
     private Library library;
 
-    public SystemProcessor(SystemManager systemManager, CliManager cliManager, Library library) {
+    public AppHandler(AppManager systemManager, CliManager cliManager, Library library) {
         this.systemManager = systemManager;
         this.cliManager = cliManager;
         this.library = library;
@@ -20,32 +20,43 @@ public class SystemProcessor {
         String commandResult = "";
         switch (commandMode) {
             case INVALID_COMMAND -> commandResult = processInvalidCommand();
-            case INSERT_BOOK -> commandResult = processInsertCommand();
-            case REMOVE_BOOK -> commandResult = processRemoveCommand();
-            case UPDATE_BOOK -> commandResult = processUpdateCommand();
-            case PRINT_BOOKS_LIST -> commandResult = processPrintBooksListCommand();
-            case SEARCH_BOOKS_BY_TITLE -> commandResult = processSearchBooksByTitleCommand();
-            case SEARCH_BOOKS_BY_AUTHOR -> commandResult = processSearchBooksByAuthorCommand();
-            case SORT_BOOKS -> commandResult = processSortBooksCommand();
+            case HELP -> commandResult = processHelpCommand();
+            case INSERT -> commandResult = processInsertCommand();
+            case REMOVE -> commandResult = processRemoveCommand();
+            case UPDATE -> commandResult = processUpdateCommand();
+            case PRINT_LIST -> commandResult = processPrintListCommand();
+            case SEARCH -> commandResult = processSearchCommand();
+            case SORT -> commandResult = processSortCommand();
             case EXIT -> commandResult = processExitCommand();
         }
-        systemManager.updateCommandHistory(commandMode, commandResult);
+        systemManager.AddToCommandHistory(commandMode, commandResult);
+        systemManager.showCommandResult(commandResult);
     }
 
     private String processInvalidCommand() {
         return cliManager.getInputError() + "\n";
     }
 
+    private String processHelpCommand() {
+        return cliManager.getCommandModeOptions() + "\n";
+    }
+
     private String processInsertCommand() {
-        String title = cliManager.getInputTitle();
+        System.out.println(cliManager.getLibraryItemTypeOptions());
+        LibraryItemType itemType = cliManager.getLibraryItemTypeOption();
+
+        if(itemType == LibraryItemType.INVALID_TYPE)
+            return "type is invalid!\n";
+
+        String title = cliManager.getInputString("title");
         if (title.isEmpty())
             return "title is invalid!\n";
 
-        String author = cliManager.getInputAuthor();
+        String author = cliManager.getInputString("author");
         if (author.isEmpty())
             return "author is invalid!\n";
 
-        int releaseYear = cliManager.getInputReleaseYear();
+        int releaseYear = cliManager.getInputInteger("releaseYear");
         if (releaseYear == -1)
             return "release year is invalid!\n";
 

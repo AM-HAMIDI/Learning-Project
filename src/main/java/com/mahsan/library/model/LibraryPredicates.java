@@ -1,5 +1,6 @@
 package com.mahsan.library.model;
 
+import java.util.Arrays;
 import java.util.function.Predicate;
 
 public final class LibraryPredicates {
@@ -58,5 +59,23 @@ public final class LibraryPredicates {
     public static Predicate<LibraryItem> thesisDefenseYearIs(int year) {
         return libraryItem -> libraryItem instanceof Thesis thesis &&
                 thesis.getDefenseYear() == year;
+    }
+
+    public static Predicate<LibraryItem> and(Predicate<LibraryItem>... predicates) {
+        return Arrays.stream(predicates).reduce(Predicate::and).orElse(item -> true);
+    }
+
+    public static Predicate<LibraryItem> or(Predicate<LibraryItem>... predicates) {
+        return Arrays.stream(predicates).reduce(Predicate::or).orElse(item -> false);
+    }
+
+    public static Predicate<LibraryItem> ofType(String type) {
+        return switch (type.toLowerCase()) {
+            case "book" -> isBook();
+            case "magazine" -> isMagazine();
+            case "thesis" -> isThesis();
+            case "reference" -> isReference();
+            default -> item -> true;
+        };
     }
 }
