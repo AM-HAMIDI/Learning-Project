@@ -68,7 +68,7 @@ public class AppManager {
         cliManager.showUI();
         while (isSystemRunning) {
             commandsCount++;
-            systemProcessor.processCommand(cliManager.getCommandMode());
+            systemProcessor.handleCommand(cliManager.getCommandMode());
         }
     }
 

@@ -26,12 +26,20 @@ public class CliManager {
         return options.toString();
     }
 
-    public String getLibraryItemTypeOptions(){
+    public String getLibraryItemTypeOptions(boolean allOptions){
         StringBuilder typeOptions = new StringBuilder();
-        for (int i = 0; i < LibraryItemType.getItemTypes().length; i++) {
-            typeOptions.append("[%d]".formatted(i + 1));
-            typeOptions.append(LibraryItemType.getItemTypes()[i].getTypeStr()).append("\n");
+        if(allOptions){
+            for (int i = 0; i < LibraryItemType.getItemTypes().length; i++) {
+                typeOptions.append("[%d]".formatted(i + 1));
+                typeOptions.append(LibraryItemType.getItemTypes()[i].getTypeStr()).append("\n");
+            }
+        } else {
+            for (int i = 0; i < LibraryItemType.getItemTypes().length - 1; i++) {
+                typeOptions.append("[%d]".formatted(i + 1));
+                typeOptions.append(LibraryItemType.getItemTypes()[i].getTypeStr()).append("\n");
+            }
         }
+
         return typeOptions.toString();
     }
 
@@ -45,13 +53,28 @@ public class CliManager {
         }
     }
 
-    public LibraryItemType getLibraryItemTypeOption() {
-        System.out.println("Choose a type [1-5]");
-        String input = scanner.nextLine().trim();
-        try {
-            return LibraryItemType.getFromInt(Integer.parseInt(input));
-        } catch (NumberFormatException exception){
-            return LibraryItemType.INVALID_TYPE;
+    public LibraryItemType getLibraryItemTypeOption(boolean allOptions) {
+        if(allOptions){
+            System.out.println("Choose a type [1-5]");
+            try {
+                String input = scanner.nextLine().trim();
+                return LibraryItemType.getFromInt(Integer.parseInt(input));
+            } catch (NumberFormatException exception){
+                return LibraryItemType.INVALID_TYPE;
+            }
+        }
+        else{
+            System.out.println("Choose a type [1-4]");
+            try {
+                String input = scanner.nextLine().trim();
+                int inputOption = Integer.parseInt(input);
+                if(inputOption == 5)
+                    return LibraryItemType.INVALID_TYPE;
+                else
+                    return LibraryItemType.getFromInt(inputOption);
+            } catch (NumberFormatException exception){
+                return LibraryItemType.INVALID_TYPE;
+            }
         }
     }
 

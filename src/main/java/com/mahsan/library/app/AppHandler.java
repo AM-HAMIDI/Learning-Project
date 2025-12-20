@@ -4,26 +4,38 @@ import com.mahsan.library.cli.*;
 import com.mahsan.library.model.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AppHandler {
     private AppManager systemManager;
     private CliManager cliManager;
     private Library library;
+    private AllTypesHandler allTypesHandler;
+    private HashMap<LibraryItemType , ItemHandler> itemHandlersMap = new HashMap<>();
 
     public AppHandler(AppManager systemManager, CliManager cliManager, Library library) {
         this.systemManager = systemManager;
         this.cliManager = cliManager;
         this.library = library;
+        this.allTypesHandler = new AllTypesHandler(cliManager , library);
+        initializeItemHandlersMap();
     }
 
-    public void processCommand(CommandMode commandMode) {
+    private void initializeItemHandlersMap(){
+        itemHandlersMap.put(LibraryItemType.BOOK , new BookHandler(cliManager , library));
+        itemHandlersMap.put(LibraryItemType.MAGAZINE , new MagazineHandler(cliManager , library));
+        itemHandlersMap.put(LibraryItemType.REFERENCE , new ReferenceHandler(cliManager , library));
+        itemHandlersMap.put(LibraryItemType.THESIS , new ThesisHandler(cliManager , library));
+    }
+
+    public void handleCommand(CommandMode commandMode) {
         String commandResult = "";
         switch (commandMode) {
-            case INVALID_COMMAND -> commandResult = processInvalidCommand();
-            case HELP -> commandResult = processHelpCommand();
-            case INSERT -> commandResult = processInsertCommand();
-            case REMOVE -> commandResult = processRemoveCommand();
-            case UPDATE -> commandResult = processUpdateCommand();
+            case INVALID_COMMAND -> commandResult = handleInvalidCommand();
+            case HELP -> commandResult = handleHelpCommand();
+            case INSERT -> commandResult = handleInsertCommand();
+            case REMOVE -> commandResult = handleRemoveCommand();
+            case UPDATE -> commandResult = handleUpdateCommand();
             case PRINT_LIST -> commandResult = processPrintListCommand();
             case SEARCH -> commandResult = processSearchCommand();
             case SORT -> commandResult = processSortCommand();
@@ -33,56 +45,51 @@ public class AppHandler {
         systemManager.showCommandResult(commandResult);
     }
 
-    private String processInvalidCommand() {
+    private String handleInvalidCommand() {
         return cliManager.getInputError() + "\n";
     }
 
-    private String processHelpCommand() {
+    private String handleHelpCommand() {
         return cliManager.getCommandModeOptions() + "\n";
     }
 
-    private String processInsertCommand() {
-        System.out.println(cliManager.getLibraryItemTypeOptions());
-        LibraryItemType itemType = cliManager.getLibraryItemTypeOption();
+    private String handleInsertCommand() {
+        System.out.println("Enter Type : ");
+        System.out.println(cliManager.getLibraryItemTypeOptions(false));
+        LibraryItemType itemType = cliManager.getLibraryItemTypeOption(false);
 
         if(itemType == LibraryItemType.INVALID_TYPE)
             return "type is invalid!\n";
 
+        return itemHandlersMap.get(itemType).handleInsertItem();
+    }
+
+    private String handleRemoveCommand() {
+        System.out.println("Enter Type : ");
+        System.out.println(cliManager.getLibraryItemTypeOptions(true));
+        LibraryItemType itemType = cliManager.getLibraryItemTypeOption(true);
+
+        if(itemType == LibraryItemType.INVALID_TYPE)
+            return "type is invalid!\n";
+        else if(itemType == LibraryItemType.ALL)
+            return allTypesHandler.handleRemoveItem();
+        else
+            return itemHandlersMap.get(itemType).handleRemoveItem();
+    }
+
+    private String handleUpdateCommand() {
+        System.out.println("Enter Type : ");
+        System.out.println(cliManager.getLibraryItemTypeOptions(true));
+        LibraryItemType itemType = cliManager.getLibraryItemTypeOption(true);
+
+        if(itemType == LibraryItemType.INVALID_TYPE)
+            return "type is invalid!\n";
+        else if(itemType == LibraryItemType.ALL)
+            return allTypesHandler.handleUpdateItem();
+        else
+            return itemHandlersMap.get(itemType).handleUpdateItem();
+
         String title = cliManager.getInputString("title");
-        if (title.isEmpty())
-            return "title is invalid!\n";
-
-        String author = cliManager.getInputString("author");
-        if (author.isEmpty())
-            return "author is invalid!\n";
-
-        int releaseYear = cliManager.getInputInteger("releaseYear");
-        if (releaseYear == -1)
-            return "release year is invalid!\n";
-
-        Status status = cliManager.getInputStatus();
-        if (status == null)
-            return "status is invalid!\n";
-
-        library.insertBook(new Book(title, author, releaseYear, status));
-        return "Book added successfully!\n";
-    }
-
-    private String processRemoveCommand() {
-        String title = cliManager.getInputTitle();
-        if (title.isEmpty())
-            return "title is invalid!\n";
-
-        Book book = library.searchBooksByTitle(title);
-        if (book == null)
-            return "This book doesn't exists\n";
-
-        library.removeBook(book);
-        return "Book removed successfully!\n";
-    }
-
-    private String processUpdateCommand() {
-        String title = cliManager.getInputTitle();
         if (title.isEmpty())
             return "title is invalid!\n";
 
