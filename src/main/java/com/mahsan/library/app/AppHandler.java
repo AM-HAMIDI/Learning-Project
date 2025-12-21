@@ -36,7 +36,7 @@ public class AppHandler {
             case INSERT -> commandResult = handleInsertCommand();
             case REMOVE -> commandResult = handleRemoveCommand();
             case UPDATE -> commandResult = handleUpdateCommand();
-            case PRINT_LIST -> commandResult = processPrintListCommand();
+            case PRINT_LIST -> commandResult = handlePrintListCommand();
             case SEARCH -> commandResult = processSearchCommand();
             case SORT -> commandResult = processSortCommand();
             case EXIT -> commandResult = processExitCommand();
@@ -79,34 +79,26 @@ public class AppHandler {
 
     private String handleUpdateCommand() {
         System.out.println("Enter Type : ");
+        System.out.println(cliManager.getLibraryItemTypeOptions(false));
+        LibraryItemType itemType = cliManager.getLibraryItemTypeOption(false);
+
+        if(itemType == LibraryItemType.INVALID_TYPE)
+            return "type is invalid!\n";
+        else
+            return itemHandlersMap.get(itemType).handleUpdateItem();
+    }
+
+    private String handlePrintListCommand() {
+        System.out.println("Enter Type : ");
         System.out.println(cliManager.getLibraryItemTypeOptions(true));
         LibraryItemType itemType = cliManager.getLibraryItemTypeOption(true);
 
         if(itemType == LibraryItemType.INVALID_TYPE)
             return "type is invalid!\n";
         else if(itemType == LibraryItemType.ALL)
-            return allTypesHandler.handleUpdateItem();
+            return allTypesHandler.handleRemoveItem();
         else
-            return itemHandlersMap.get(itemType).handleUpdateItem();
-
-        String title = cliManager.getInputString("title");
-        if (title.isEmpty())
-            return "title is invalid!\n";
-
-        Status status = cliManager.getInputStatus();
-        if (status == null)
-            return "status is invalid!\n";
-
-        Book book = library.searchBooksByTitle(title);
-        if (book == null)
-            return "book not found!\n";
-
-        library.updateBook(book, status);
-        return "Book updated successfully!\n";
-    }
-
-    private String processPrintBooksListCommand() {
-        return "Books list :\n" + library.getBooksStringList() + "\n";
+            return itemHandlersMap.get(itemType).handleRemoveItem();
     }
 
     private String processSearchBooksByTitleCommand() {

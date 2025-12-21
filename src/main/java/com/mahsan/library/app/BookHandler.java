@@ -54,7 +54,31 @@ public class BookHandler extends ItemHandler{
     }
 
     @Override
-    public String handlePrintItem() {
+    public String handleUpdateItem(){
+        String title = getCliManager().getInputString("title");
+        if (title.isEmpty())
+            return "title is invalid!\n";
 
+        Status status = getCliManager().getInputStatus();
+        if (status == null)
+            return "status is invalid!\n";
+
+        var filter = LibraryPredicates.and(
+                LibraryPredicates.isBook(),
+                LibraryPredicates.titleEquals(title)
+        );
+
+        ArrayList<LibraryItem> matchedItems = getLibrary().searchItems(filter);
+        if (matchedItems.isEmpty())
+            return "book not found!\n";
+
+        getLibrary().updateLibraryItem(matchedItems.get(0) , status);
+        return "Book updated successfully!\n";
+    }
+
+    @Override
+    public String handlePrintItemsList() {
+        var filter = LibraryPredicates.isBook();
+        return "Books list :\n" + getLibrary().getItemsStringList(filter) + "\n";
     }
 }

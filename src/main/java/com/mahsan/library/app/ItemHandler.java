@@ -22,5 +22,6 @@ public abstract class ItemHandler {
 
     public abstract String handleInsertItem();
     public abstract String handleRemoveItem();
-    public abstract String handlePrintItem();
+    public abstract String handleUpdateItem();
+    public abstract String handlePrintItemsList();
 }

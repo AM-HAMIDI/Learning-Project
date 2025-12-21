@@ -37,7 +37,8 @@ public class AllTypesHandler {
         return "item(s) removed successfully!\n";
     }
 
-    public String handleUpdateItem(){
-        
+    public String handlePrintList(){
+        var filter = LibraryPredicates.all();
+        return "All items list :\n" + library.getItemsStringList(filter) + "\n";
     }
 }

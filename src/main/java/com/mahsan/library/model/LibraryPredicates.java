@@ -5,6 +5,10 @@ import java.util.function.Predicate;
 
 public final class LibraryPredicates {
 
+    public static Predicate<LibraryItem> all() {
+        return item -> true;
+    }
+
     // Type predicates
     public static Predicate<LibraryItem> isBook() {
         return libraryItem -> libraryItem instanceof Book;
