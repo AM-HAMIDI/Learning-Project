@@ -37,7 +37,7 @@ public class AppHandler {
             case REMOVE -> commandResult = handleRemoveCommand();
             case UPDATE -> commandResult = handleUpdateCommand();
             case PRINT_LIST -> commandResult = handlePrintListCommand();
-            case SEARCH -> commandResult = processSearchCommand();
+            case SEARCH -> commandResult = handleSearchCommand();
             case SORT -> commandResult = processSortCommand();
             case EXIT -> commandResult = processExitCommand();
         }
@@ -96,20 +96,22 @@ public class AppHandler {
         if(itemType == LibraryItemType.INVALID_TYPE)
             return "type is invalid!\n";
         else if(itemType == LibraryItemType.ALL)
-            return allTypesHandler.handleRemoveItem();
+            return allTypesHandler.handlePrintItemsList();
         else
-            return itemHandlersMap.get(itemType).handleRemoveItem();
+            return itemHandlersMap.get(itemType).handlePrintItemsList();
     }
 
-    private String processSearchBooksByTitleCommand() {
-        String title = cliManager.getInputTitle();
-        if (title.isEmpty()) {
-            return "title is invalid!\n";
-        }
-        Book book = library.searchBooksByTitle(title);
-        if (book == null)
-            return "book not found!\n";
-        return "found book : " + book + "\n";
+    private String handleSearchCommand() {
+        System.out.println("Enter Type : ");
+        System.out.println(cliManager.getLibraryItemTypeOptions(true));
+        LibraryItemType itemType = cliManager.getLibraryItemTypeOption(true);
+
+        if(itemType == LibraryItemType.INVALID_TYPE)
+            return "type is invalid!\n";
+        else if(itemType == LibraryItemType.ALL)
+            return allTypesHandler.handleSearchItems();
+        else
+            return itemHandlersMap.get(itemType).handleSearchItems();
     }
 
     private String processSearchBooksByAuthorCommand() {

@@ -13,6 +13,10 @@ public class CliManager {
         System.out.println("\n" + title + "\n" + options);
     }
 
+    public Scanner getScanner(){
+        return scanner;
+    }
+
     private String getTitle() {
         return "-".repeat(50) + " Library Management System " + "-".repeat(50);
     }

@@ -24,4 +24,6 @@ public abstract class ItemHandler {
     public abstract String handleRemoveItem();
     public abstract String handleUpdateItem();
     public abstract String handlePrintItemsList();
+    public abstract String handleSearchItems();
+    public abstract String getFields();
 }

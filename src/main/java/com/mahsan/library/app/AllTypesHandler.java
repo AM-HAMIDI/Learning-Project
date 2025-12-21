@@ -1,9 +1,7 @@
 package com.mahsan.library.app;
 
 import com.mahsan.library.cli.CliManager;
-import com.mahsan.library.model.Library;
-import com.mahsan.library.model.LibraryItem;
-import com.mahsan.library.model.LibraryPredicates;
+import com.mahsan.library.model.*;
 
 import java.util.ArrayList;
 import java.util.function.Predicate;
@@ -23,7 +21,7 @@ public class AllTypesHandler {
         if (title.isEmpty())
             return "title is invalid!\n";
 
-        Predicate<LibraryItem> filter = LibraryPredicates.titleEquals(title);
+        var filter = LibraryPredicates.titleEquals(title);
 
         ArrayList<LibraryItem> matchedItems = library.searchItems(filter);
 
@@ -37,8 +35,56 @@ public class AllTypesHandler {
         return "item(s) removed successfully!\n";
     }
 
-    public String handlePrintList(){
+    public String handlePrintItemsList(){
         var filter = LibraryPredicates.all();
         return "All items list :\n" + library.getItemsStringList(filter) + "\n";
     }
+
+    public String handleSearchItems() {
+        System.out.println(getFields());
+        System.out.println("Choose a search type [1-2]:");
+
+        int searchType;
+        try {
+            String input = cliManager.getScanner().nextLine().trim();
+            searchType = Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            return "search type is invalid!\n";
+        }
+
+        Predicate<LibraryItem> filter;
+        switch (searchType) {
+            case 1 -> {
+                String title = cliManager.getInputString("title");
+                if (title.isEmpty()) return "title is invalid!\n";
+                filter = LibraryPredicates.titleEquals(title);
+            }
+            case 2 -> {
+                Status status = cliManager.getInputStatus();
+                if (status == null) return "status is invalid!\n";
+                filter = LibraryPredicates.statusEquals(status);
+            }
+            default -> {
+                return "search type is invalid!\n";
+            }
+        }
+
+        return search(filter);
+    }
+
+    private String search(Predicate<LibraryItem> filter) {
+        ArrayList<LibraryItem> matchedItems = library.searchItems(filter);
+        if (matchedItems.isEmpty()) return "No items found matching your search\n";
+
+        StringBuilder result = new StringBuilder("Found items:\n");
+        for (LibraryItem item : matchedItems) {
+            result.append(item).append("\n");
+        }
+        return result.toString();
+    }
+
+    public String getFields() {
+        return "1 - title\n2 - status\n";
+    }
+
 }
