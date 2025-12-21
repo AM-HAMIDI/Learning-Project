@@ -71,7 +71,7 @@ public class BookHandler extends ItemHandler{
 
         ArrayList<LibraryItem> matchedItems = getLibrary().searchItems(filter);
         if (matchedItems.isEmpty())
-            return "book not found!\n";
+            return "ook not found!\n";
 
         getLibrary().updateLibraryItem(matchedItems.get(0) , status);
         return "Book updated successfully!\n";
@@ -128,14 +128,15 @@ public class BookHandler extends ItemHandler{
                 filter
         );
 
-        return search(filter);
+        return search(filter , "Books");
     }
 
-    private String search(Predicate<LibraryItem> filter) {
+    private String search(Predicate<LibraryItem> filter , String label) {
         ArrayList<LibraryItem> matchedItems = getLibrary().searchItems(filter);
-        if (matchedItems.isEmpty()) return "No Books found matching your search\n";
+        if (matchedItems.isEmpty())
+            return "No " + label + " found matching your search\n";
 
-        StringBuilder result = new StringBuilder("Found Books:\n");
+        StringBuilder result = new StringBuilder("Found " + label + ":\n");
         for (LibraryItem item : matchedItems) {
             result.append(item).append("\n");
         }
@@ -146,5 +147,20 @@ public class BookHandler extends ItemHandler{
         return "1 - title\n2 - status\n3 - author\n4 - releaseYear";
     }
 
+    @Override
+    public String handleSortItems(){
+        var filter = LibraryPredicates.isBook();
+        var comparator = LibraryComparators.bookReleaseYearAscComparator();
 
+        ArrayList<LibraryItem> sortedItems = getLibrary().sortItems(filter , comparator);
+        if (sortedItems.isEmpty())
+            return "library is empty!\n";
+
+        StringBuilder result = new StringBuilder();
+        result.append("sorted books list : \n");
+        for (LibraryItem libraryItem : sortedItems) {
+            result.append(libraryItem).append("\n");
+        }
+        return result.toString();
+    }
 }

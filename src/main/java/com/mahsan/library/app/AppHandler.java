@@ -11,21 +11,21 @@ public class AppHandler {
     private CliManager cliManager;
     private Library library;
     private AllTypesHandler allTypesHandler;
-    private HashMap<LibraryItemType , ItemHandler> itemHandlersMap = new HashMap<>();
+    private HashMap<LibraryItemType, ItemHandler> itemHandlersMap = new HashMap<>();
 
     public AppHandler(AppManager systemManager, CliManager cliManager, Library library) {
         this.systemManager = systemManager;
         this.cliManager = cliManager;
         this.library = library;
-        this.allTypesHandler = new AllTypesHandler(cliManager , library);
+        this.allTypesHandler = new AllTypesHandler(cliManager, library);
         initializeItemHandlersMap();
     }
 
-    private void initializeItemHandlersMap(){
-        itemHandlersMap.put(LibraryItemType.BOOK , new BookHandler(cliManager , library));
-        itemHandlersMap.put(LibraryItemType.MAGAZINE , new MagazineHandler(cliManager , library));
-        itemHandlersMap.put(LibraryItemType.REFERENCE , new ReferenceHandler(cliManager , library));
-        itemHandlersMap.put(LibraryItemType.THESIS , new ThesisHandler(cliManager , library));
+    private void initializeItemHandlersMap() {
+        itemHandlersMap.put(LibraryItemType.BOOK, new BookHandler(cliManager, library));
+        itemHandlersMap.put(LibraryItemType.MAGAZINE, new MagazineHandler(cliManager, library));
+        itemHandlersMap.put(LibraryItemType.REFERENCE, new ReferenceHandler(cliManager, library));
+        itemHandlersMap.put(LibraryItemType.THESIS, new ThesisHandler(cliManager, library));
     }
 
     public void handleCommand(CommandMode commandMode) {
@@ -38,7 +38,7 @@ public class AppHandler {
             case UPDATE -> commandResult = handleUpdateCommand();
             case PRINT_LIST -> commandResult = handlePrintListCommand();
             case SEARCH -> commandResult = handleSearchCommand();
-            case SORT -> commandResult = processSortCommand();
+            case SORT -> commandResult = handleSortCommand();
             case EXIT -> commandResult = processExitCommand();
         }
         systemManager.AddToCommandHistory(commandMode, commandResult);
@@ -58,7 +58,7 @@ public class AppHandler {
         System.out.println(cliManager.getLibraryItemTypeOptions(false));
         LibraryItemType itemType = cliManager.getLibraryItemTypeOption(false);
 
-        if(itemType == LibraryItemType.INVALID_TYPE)
+        if (itemType == LibraryItemType.INVALID_TYPE)
             return "type is invalid!\n";
 
         return itemHandlersMap.get(itemType).handleInsertItem();
@@ -69,9 +69,9 @@ public class AppHandler {
         System.out.println(cliManager.getLibraryItemTypeOptions(true));
         LibraryItemType itemType = cliManager.getLibraryItemTypeOption(true);
 
-        if(itemType == LibraryItemType.INVALID_TYPE)
+        if (itemType == LibraryItemType.INVALID_TYPE)
             return "type is invalid!\n";
-        else if(itemType == LibraryItemType.ALL)
+        else if (itemType == LibraryItemType.ALL)
             return allTypesHandler.handleRemoveItem();
         else
             return itemHandlersMap.get(itemType).handleRemoveItem();
@@ -82,7 +82,7 @@ public class AppHandler {
         System.out.println(cliManager.getLibraryItemTypeOptions(false));
         LibraryItemType itemType = cliManager.getLibraryItemTypeOption(false);
 
-        if(itemType == LibraryItemType.INVALID_TYPE)
+        if (itemType == LibraryItemType.INVALID_TYPE)
             return "type is invalid!\n";
         else
             return itemHandlersMap.get(itemType).handleUpdateItem();
@@ -93,9 +93,9 @@ public class AppHandler {
         System.out.println(cliManager.getLibraryItemTypeOptions(true));
         LibraryItemType itemType = cliManager.getLibraryItemTypeOption(true);
 
-        if(itemType == LibraryItemType.INVALID_TYPE)
+        if (itemType == LibraryItemType.INVALID_TYPE)
             return "type is invalid!\n";
-        else if(itemType == LibraryItemType.ALL)
+        else if (itemType == LibraryItemType.ALL)
             return allTypesHandler.handlePrintItemsList();
         else
             return itemHandlersMap.get(itemType).handlePrintItemsList();
@@ -106,42 +106,16 @@ public class AppHandler {
         System.out.println(cliManager.getLibraryItemTypeOptions(true));
         LibraryItemType itemType = cliManager.getLibraryItemTypeOption(true);
 
-        if(itemType == LibraryItemType.INVALID_TYPE)
+        if (itemType == LibraryItemType.INVALID_TYPE)
             return "type is invalid!\n";
-        else if(itemType == LibraryItemType.ALL)
+        else if (itemType == LibraryItemType.ALL)
             return allTypesHandler.handleSearchItems();
         else
             return itemHandlersMap.get(itemType).handleSearchItems();
     }
 
-    private String processSearchBooksByAuthorCommand() {
-        String author = cliManager.getInputAuthor();
-        if (author.isEmpty())
-            return "author is invalid!\n";
-
-        ArrayList<Book> authorBooks = library.searchBooksByAuthor(author);
-        if (authorBooks.isEmpty())
-            return "book not found!\n";
-
-        StringBuilder result = new StringBuilder();
-        result.append("author books : \n");
-        for (Book book : authorBooks) {
-            result.append(book).append("\n");
-        }
-        return result.toString();
-    }
-
-    private String processSortBooksCommand() {
-        ArrayList<Book> sortedBooks = library.sortBooksByReleaseYear();
-        if (sortedBooks.isEmpty())
-            return "library is empty!\n";
-
-        StringBuilder result = new StringBuilder();
-        result.append("sorted books list : \n");
-        for (Book book : sortedBooks) {
-            result.append(book).append("\n");
-        }
-        return result.toString();
+    private String handleSortCommand() {
+        return itemHandlersMap.get(LibraryItemType.BOOK).handleSortItems();
     }
 
     private String processExitCommand() {

@@ -25,5 +25,6 @@ public abstract class ItemHandler {
     public abstract String handleUpdateItem();
     public abstract String handlePrintItemsList();
     public abstract String handleSearchItems();
+    public abstract String handleSortItems();
     public abstract String getFields();
 }
