@@ -1,0 +1,13 @@
+[ {
+  "index" : "1",
+  "command" : "HELP",
+  "result" : "[1]Help\n[2]Insert\n[3]Remove\n[4]Update\n[5]Print list\n[6]Search\n[7]Sort\n[8]Exit\n\n"
+}, {
+  "index" : "2",
+  "command" : "SEARCH",
+  "result" : "Found items:\n(title : Dune , author : Frank Herbert , releaseYear : 1965 , status : BORROWED)\n"
+}, {
+  "index" : "3",
+  "command" : "EXIT",
+  "result" : "system is finished!\n"
+} ]

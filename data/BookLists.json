@@ -1,62 +1,72 @@
 [
-    {
-        "title": "1984",
-        "author": "George Orwell",
-        "releaseYear": 1949,
-        "status": "EXIST"
-    },
-    {
-        "title": "The Hobbit",
-        "author": "J.R.R. Tolkien",
-        "releaseYear": 1937,
-        "status": "EXIST"
-    },
-    {
-        "title": "Harry Potter",
-        "author": "J.K. Rowling",
-        "releaseYear": 1997,
-        "status": "BANNED"
-    },
-    {
-        "title": "The Great Gatsby",
-        "author": "F. Scott Fitzgerald",
-        "releaseYear": 1925,
-        "status": "EXIST"
-    },
-    {
-        "title": "To Kill a Mockingbird",
-        "author": "Harper Lee",
-        "releaseYear": 1960,
-        "status": "BORROWED"
-    },
-    {
-        "title": "Brave New World",
-        "author": "Aldous Huxley",
-        "releaseYear": 1932,
-        "status": "EXIST"
-    },
-    {
-        "title": "Fahrenheit 451",
-        "author": "Ray Bradbury",
-        "releaseYear": 1953,
-        "status": "EXIST"
-    },
-    {
-        "title": "Dune",
-        "author": "Frank Herbert",
-        "releaseYear": 1965,
-        "status": "BORROWED"
-    },
-    {
-        "title": "The Catcher in the Rye",
-        "author": "J.D. Salinger",
-        "releaseYear": 1951,
-        "status": "EXIST"
-    },
-    {
-        "title": "Animal Farm",
-        "author": "George Orwell",
-        "releaseYear": 1945,
-        "status": "BANNED"
-    }
+  {
+    "type": "Book",
+    "title": "1984",
+    "author": "George Orwell",
+    "releaseYear": 1949,
+    "status": "EXIST"
+  },
+  {
+    "type": "Book",
+    "title": "The Hobbit",
+    "author": "J.R.R. Tolkien",
+    "releaseYear": 1937,
+    "status": "EXIST"
+  },
+  {
+    "type": "Book",
+    "title": "Harry Potter",
+    "author": "J.K. Rowling",
+    "releaseYear": 1997,
+    "status": "BANNED"
+  },
+  {
+    "type": "Book",
+    "title": "The Great Gatsby",
+    "author": "F. Scott Fitzgerald",
+    "releaseYear": 1925,
+    "status": "EXIST"
+  },
+  {
+    "type": "Book",
+    "title": "To Kill a Mockingbird",
+    "author": "Harper Lee",
+    "releaseYear": 1960,
+    "status": "BORROWED"
+  },
+  {
+    "type": "Book",
+    "title": "Brave New World",
+    "author": "Aldous Huxley",
+    "releaseYear": 1932,
+    "status": "EXIST"
+  },
+  {
+    "type": "Book",
+    "title": "Fahrenheit 451",
+    "author": "Ray Bradbury",
+    "releaseYear": 1953,
+    "status": "EXIST"
+  },
+  {
+    "type": "Book",
+    "title": "Dune",
+    "author": "Frank Herbert",
+    "releaseYear": 1965,
+    "status": "BORROWED"
+  },
+  {
+    "type": "Book",
+    "title": "The Catcher in the Rye",
+    "author": "J.D. Salinger",
+    "releaseYear": 1951,
+    "status": "EXIST"
+  },
+  {
+    "type": "Book",
+    "title": "Animal Farm",
+    "author": "George Orwell",
+    "releaseYear": 1945,
+    "status": "BANNED"
+  }
 ]
