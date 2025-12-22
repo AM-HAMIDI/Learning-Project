@@ -87,4 +87,13 @@ public class AllTypesHandler {
         return "1 - title\n2 - status\n";
     }
 
+    public String handlePrintBorrowedItems() {
+        var filter = LibraryPredicates.and(
+                LibraryPredicates.all(),
+                LibraryPredicates.statusEquals(Status.BORROWED)
+        );
+
+        return "Borrowed items list :\n" + library.getItemsStringList(filter) + "\n";
+    }
+
 }

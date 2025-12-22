@@ -32,7 +32,8 @@
     "title": "To Kill a Mockingbird",
     "author": "Harper Lee",
     "releaseYear": 1960,
-    "status": "BORROWED"
+    "status": "BORROWED",
+    "returnDate": "2025/03/15"
   },
   {
     "type": "Book",
@@ -53,7 +54,8 @@
     "title": "Dune",
     "author": "Frank Herbert",
     "releaseYear": 1965,
-    "status": "BORROWED"
+    "status": "BORROWED",
+    "returnDate": "2025/11/02"
   },
   {
     "type": "Book",

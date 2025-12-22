@@ -1,5 +1,6 @@
 package com.mahsan.library.model;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Thesis extends LibraryItem implements HasAuthor{
@@ -7,7 +8,13 @@ public class Thesis extends LibraryItem implements HasAuthor{
     private final int defenseYear;
 
     public Thesis(String title, String author, int defenseYear, Status status) {
-        super(title, status);
+        super("Thesis" , title, status);
+        this.author = author;
+        this.defenseYear = defenseYear;
+    }
+
+    public Thesis(String title, String author, int defenseYear, Status status , LocalDate returnDate) {
+        super("Thesis" , title, status , returnDate);
         this.author = author;
         this.defenseYear = defenseYear;
     }
@@ -38,15 +45,15 @@ public class Thesis extends LibraryItem implements HasAuthor{
 
     @Override
     public String toString() {
-        return "(title : %s , author : %s , defenseYear : %d , status : %s)"
-                .formatted(title, author, defenseYear, status);
+        return "(type : %s , title : %s , author : %s , defenseYear : %d , status : %s)"
+                .formatted(itemTypeStr , title, author, defenseYear, status);
     }
 
     @Override
     public void display() {
         System.out.printf(
-                "title : %s , author : %s , defenseYear : %d , status : %s%n",
-                title, author, defenseYear, status
+                "type : %s , title : %s , author : %s , defenseYear : %d , status : %s%n",
+                itemTypeStr , title, author, defenseYear, status
         );
     }
 }

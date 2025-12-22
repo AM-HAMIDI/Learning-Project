@@ -3,13 +3,15 @@ package com.mahsan.library.app;
 import com.mahsan.library.cli.CliManager;
 import com.mahsan.library.model.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
 public class ReferenceHandler extends ItemHandler {
 
     public ReferenceHandler(CliManager cliManager, Library library) {
-        super(cliManager, library);
+        super(cliManager, library , LibraryPredicates.isReference() , "Reference");
     }
 
     @Override
@@ -32,52 +34,6 @@ public class ReferenceHandler extends ItemHandler {
 
         getLibrary().insertLibraryItem(new Reference(title, category, publisher, status));
         return "Reference added successfully!\n";
-    }
-
-    @Override
-    public String handleRemoveItem() {
-        String title = getCliManager().getInputString("title");
-        if (title.isEmpty())
-            return "title is invalid!\n";
-
-        var filter = LibraryPredicates.and(
-                LibraryPredicates.isReference(),
-                LibraryPredicates.titleEquals(title));
-
-        ArrayList<LibraryItem> matchedItems = getLibrary().searchItems(filter);
-        if (matchedItems.isEmpty())
-            return "This reference doesn't exists\n";
-
-        getLibrary().removeLibraryItem(matchedItems.get(0));
-        return "Reference removed successfully!\n";
-    }
-
-    @Override
-    public String handleUpdateItem() {
-        String title = getCliManager().getInputString("title");
-        if (title.isEmpty())
-            return "title is invalid!\n";
-
-        Status status = getCliManager().getInputStatus();
-        if (status == null)
-            return "status is invalid!\n";
-
-        var filter = LibraryPredicates.and(
-                LibraryPredicates.isReference(),
-                LibraryPredicates.titleEquals(title));
-
-        ArrayList<LibraryItem> matchedItems = getLibrary().searchItems(filter);
-        if (matchedItems.isEmpty())
-            return "reference not found!\n";
-
-        getLibrary().updateLibraryItem(matchedItems.get(0), status);
-        return "Reference updated successfully!\n";
-    }
-
-    @Override
-    public String handlePrintItemsList() {
-        var filter = LibraryPredicates.isReference();
-        return "References list :\n" + getLibrary().getItemsStringList(filter) + "\n";
     }
 
     @Override

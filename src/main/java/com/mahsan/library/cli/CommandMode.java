@@ -11,6 +11,9 @@ public enum CommandMode {
     PRINT_LIST("Print list"),
     SEARCH("Search"),
     SORT("Sort"),
+    BORROW("Borrow"),
+    RETURN("Return"),
+    PRINT_BORROWED_ITEMS("Print borrowed items"),
     EXIT("Exit");
 
     private final String commandStr;
@@ -29,9 +32,9 @@ public enum CommandMode {
     }
 
     public static CommandMode getFromInt(int commandIndex) {
-        if (commandIndex < 1 || commandIndex > 8)
-            return INVALID_COMMAND;
-        else
+        if (commandIndex >= 0 && commandIndex < values().length)
             return values()[commandIndex];
+        else
+            return INVALID_COMMAND;
     }
 }

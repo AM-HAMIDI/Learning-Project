@@ -48,7 +48,7 @@ public class CliManager {
     }
 
     public CommandMode getCommandMode() {
-        System.out.println("Choose an option [1-8]:");
+        System.out.println("Choose an option [1-" + (CommandMode.values().length - 1) + "]:");
         String input = scanner.nextLine().trim();
         try {
             return CommandMode.getFromInt(Integer.parseInt(input));

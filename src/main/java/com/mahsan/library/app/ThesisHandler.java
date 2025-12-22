@@ -3,13 +3,15 @@ package com.mahsan.library.app;
 import com.mahsan.library.cli.CliManager;
 import com.mahsan.library.model.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
 public class ThesisHandler extends ItemHandler {
 
     public ThesisHandler(CliManager cliManager, Library library) {
-        super(cliManager, library);
+        super(cliManager, library , LibraryPredicates.isThesis() , "Thesis");
     }
 
     @Override
@@ -32,52 +34,6 @@ public class ThesisHandler extends ItemHandler {
 
         getLibrary().insertLibraryItem(new Thesis(title, author, defenseYear, status));
         return "Thesis added successfully!\n";
-    }
-
-    @Override
-    public String handleRemoveItem() {
-        String title = getCliManager().getInputString("title");
-        if (title.isEmpty())
-            return "title is invalid!\n";
-
-        var filter = LibraryPredicates.and(
-                LibraryPredicates.isThesis(),
-                LibraryPredicates.titleEquals(title));
-
-        ArrayList<LibraryItem> matchedItems = getLibrary().searchItems(filter);
-        if (matchedItems.isEmpty())
-            return "This thesis doesn't exists\n";
-
-        getLibrary().removeLibraryItem(matchedItems.get(0));
-        return "Thesis removed successfully!\n";
-    }
-
-    @Override
-    public String handleUpdateItem() {
-        String title = getCliManager().getInputString("title");
-        if (title.isEmpty())
-            return "title is invalid!\n";
-
-        Status status = getCliManager().getInputStatus();
-        if (status == null)
-            return "status is invalid!\n";
-
-        var filter = LibraryPredicates.and(
-                LibraryPredicates.isThesis(),
-                LibraryPredicates.titleEquals(title));
-
-        ArrayList<LibraryItem> matchedItems = getLibrary().searchItems(filter);
-        if (matchedItems.isEmpty())
-            return "thesis not found!\n";
-
-        getLibrary().updateLibraryItem(matchedItems.get(0), status);
-        return "Thesis updated successfully!\n";
-    }
-
-    @Override
-    public String handlePrintItemsList() {
-        var filter = LibraryPredicates.isThesis();
-        return "Theses list :\n" + getLibrary().getItemsStringList(filter) + "\n";
     }
 
     @Override

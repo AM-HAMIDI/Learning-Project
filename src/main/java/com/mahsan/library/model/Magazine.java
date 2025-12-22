@@ -1,5 +1,6 @@
 package com.mahsan.library.model;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Magazine extends LibraryItem implements HasPublisher{
@@ -8,7 +9,13 @@ public class Magazine extends LibraryItem implements HasPublisher{
     private final String publisher;
 
     public Magazine(String title, int issueNumber, String publisher, Status status) {
-        super(title, status);
+        super("Magazine" , title, status);
+        this.issueNumber = issueNumber;
+        this.publisher = publisher;
+    }
+
+    public Magazine(String title, int issueNumber, String publisher, Status status , LocalDate returnDate) {
+        super("Magazine" , title, status , returnDate);
         this.issueNumber = issueNumber;
         this.publisher = publisher;
     }
@@ -39,15 +46,15 @@ public class Magazine extends LibraryItem implements HasPublisher{
 
     @Override
     public String toString() {
-        return "(title : %s , issueNumber : %d , publisher : %s , status : %s)"
-                .formatted(title, issueNumber, publisher, status);
+        return "(type : %s , title : %s , issueNumber : %d , publisher : %s , status : %s)"
+                .formatted(itemTypeStr , title, issueNumber, publisher, status);
     }
 
     @Override
     public void display() {
         System.out.printf(
-                "title : %s , issueNumber : %d , publisher : %s , status : %s%n",
-                title, issueNumber, publisher, status
+                "type : %s , title : %s , issueNumber : %d , publisher : %s , status : %s%n",
+                itemTypeStr , title, issueNumber, publisher, status
         );
     }
 }

@@ -1,5 +1,6 @@
 package com.mahsan.library.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.function.Predicate;
@@ -24,6 +25,28 @@ public class Library {
         while (node != null) {
             if (node.getData().equals(libraryItem))
                 node.getData().setStatus(status);
+            node = node.getNextNode();
+        }
+    }
+
+    public void borrowLibraryItem(LibraryItem libraryItem , LocalDate returnDate){
+        GenericNode<LibraryItem> node = libraryItems.getHeadNode();
+        while (node != null) {
+            if (node.getData().equals(libraryItem)){
+                node.getData().setStatus(Status.BORROWED);
+                node.getData().setReturnDate(returnDate);
+            }
+            node = node.getNextNode();
+        }
+    }
+
+    public void returnLibraryItem(LibraryItem libraryItem){
+        GenericNode<LibraryItem> node = libraryItems.getHeadNode();
+        while (node != null) {
+            if (node.getData().equals(libraryItem)){
+                node.getData().setStatus(Status.EXIST);
+                node.getData().setReturnDate(null);
+            }
             node = node.getNextNode();
         }
     }

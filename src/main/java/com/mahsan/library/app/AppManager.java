@@ -8,6 +8,7 @@ import com.mahsan.library.io.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class AppManager {
@@ -56,7 +57,9 @@ public class AppManager {
         ArrayList<JsonNode> jsonNodes = libraryJsonHandler.getArrayElements();
         for (JsonNode jsonNode : jsonNodes) {
             String type = JsonHandler.getProperty(jsonNode , "type");
-            library.insertLibraryItem(getNewLibraryItemFromJson(type , jsonNode));
+            LibraryItem libraryItem = getNewLibraryItemFromJson(type , jsonNode);
+            if(libraryItem != null)
+                library.insertLibraryItem(getNewLibraryItemFromJson(type , jsonNode));
         }
         return true;
     }
@@ -103,15 +106,33 @@ public class AppManager {
         String author = JsonHandler.getProperty(jsonNode, "author");
         int releaseYear = Integer.parseInt(JsonHandler.getProperty(jsonNode, "releaseYear"));
         Status status = Status.getStatus(JsonHandler.getProperty(jsonNode, "status"));
-        return new Book(title , author , releaseYear , status);
+
+        if (status == Status.BORROWED) {
+            if(!jsonNode.has("returnDate"))
+                return null;
+            String returnDateStr = JsonHandler.getProperty(jsonNode, "returnDate");
+            LocalDate returnDate = LocalDate.parse(returnDateStr, LibraryItem.dateTimeFormatter);
+            return new Book(title, author, releaseYear, status, returnDate);
+        } else {
+            return new Book(title, author, releaseYear, status);
+        }
     }
 
     private Magazine getNewMagazineFromJson(JsonNode jsonNode){
         String title = JsonHandler.getProperty(jsonNode , "title");
-        int issueNumber = Integer.parseInt(JsonHandler.getProperty(jsonNode, "issueNumber"));
+        int issueNumber = Integer.parseInt(JsonHandler.getProperty(jsonNode , "issueNumber"));
         String publisher = JsonHandler.getProperty(jsonNode , "publisher");
         Status status = Status.getStatus(JsonHandler.getProperty(jsonNode, "status"));
-        return new Magazine(title , issueNumber , publisher , status);
+
+        if (status == Status.BORROWED) {
+            if(!jsonNode.has("returnDate"))
+                return null;
+            String returnDateStr = JsonHandler.getProperty(jsonNode, "returnDate");
+            LocalDate returnDate = LocalDate.parse(returnDateStr, LibraryItem.dateTimeFormatter);
+            return new Magazine(title, issueNumber, publisher, status, returnDate);
+        } else {
+            return new Magazine(title, issueNumber, publisher, status);
+        }
     }
 
     private Reference getNewReferenceFromJson(JsonNode jsonNode){
@@ -119,7 +140,16 @@ public class AppManager {
         String category = JsonHandler.getProperty(jsonNode , "category");
         String publisher = JsonHandler.getProperty(jsonNode , "publisher");
         Status status = Status.getStatus(JsonHandler.getProperty(jsonNode, "status"));
-        return new Reference(title , category , publisher , status);
+
+        if (status == Status.BORROWED) {
+            if(!jsonNode.has("returnDate"))
+                return null;
+            String returnDateStr = JsonHandler.getProperty(jsonNode, "returnDate");
+            LocalDate returnDate = LocalDate.parse(returnDateStr, LibraryItem.dateTimeFormatter);
+            return new Reference(title, category, publisher, status, returnDate);
+        } else {
+            return new Reference(title, category, publisher, status);
+        }
     }
 
     private Thesis getNewThesisFromJson(JsonNode jsonNode){
@@ -127,6 +157,15 @@ public class AppManager {
         String author = JsonHandler.getProperty(jsonNode, "author");
         int defenseYear = Integer.parseInt(JsonHandler.getProperty(jsonNode, "defenseYear"));
         Status status = Status.getStatus(JsonHandler.getProperty(jsonNode, "status"));
-        return new Thesis(title , author , defenseYear , status);
+
+        if (status == Status.BORROWED) {
+            if(!jsonNode.has("returnDate"))
+                return null;
+            String returnDateStr = JsonHandler.getProperty(jsonNode, "returnDate");
+            LocalDate returnDate = LocalDate.parse(returnDateStr, LibraryItem.dateTimeFormatter);
+            return new Thesis(title, author, defenseYear, status, returnDate);
+        } else {
+            return new Thesis(title, author, defenseYear, status);
+        }
     }
 }

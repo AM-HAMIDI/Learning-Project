@@ -1,5 +1,6 @@
 package com.mahsan.library.model;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Reference extends LibraryItem implements HasPublisher{
@@ -7,7 +8,13 @@ public class Reference extends LibraryItem implements HasPublisher{
     private final String publisher;
 
     public Reference(String title , String category , String publisher , Status status){
-        super(title , status);
+        super("Reference" , title , status);
+        this.category = category;
+        this.publisher = publisher;
+    }
+
+    public Reference(String title , String category , String publisher , Status status , LocalDate returnDate){
+        super("Reference" , title , status , returnDate);
         this.category = category;
         this.publisher = publisher;
     }
@@ -34,14 +41,14 @@ public class Reference extends LibraryItem implements HasPublisher{
 
     @Override
     public String toString() {
-        return "(title : %s , category : %s , publisher : %s , status : %s)"
-                .formatted(title, category, publisher, status);
+        return "(type : %s , title : %s , category : %s , publisher : %s , status : %s)"
+                .formatted(itemTypeStr , title, category, publisher, status);
     }
 
     @Override
     public void display() {
         System.out.printf(
-                "title : %s , category : %s , publisher : %s , status : %s%n",
-                title , category , publisher , status);
+                "type : %s , title : %s , category : %s , publisher : %s , status : %s%n",
+                itemTypeStr , title , category , publisher , status);
     }
 }

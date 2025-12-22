@@ -3,7 +3,6 @@ package com.mahsan.library.app;
 import com.mahsan.library.cli.*;
 import com.mahsan.library.model.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AppHandler {
@@ -39,7 +38,10 @@ public class AppHandler {
             case PRINT_LIST -> commandResult = handlePrintListCommand();
             case SEARCH -> commandResult = handleSearchCommand();
             case SORT -> commandResult = handleSortCommand();
-            case EXIT -> commandResult = processExitCommand();
+            case BORROW -> commandResult = handleBorrowCommand();
+            case RETURN -> commandResult = handleReturnCommand();
+            case PRINT_BORROWED_ITEMS -> commandResult = handlePrintBorrowedItems();
+            case EXIT -> commandResult = handleExitCommand();
         }
         systemManager.AddToCommandHistory(commandMode, commandResult);
         systemManager.showCommandResult(commandResult);
@@ -54,9 +56,7 @@ public class AppHandler {
     }
 
     private String handleInsertCommand() {
-        System.out.println("Enter Type : ");
-        System.out.println(cliManager.getLibraryItemTypeOptions(false));
-        LibraryItemType itemType = cliManager.getLibraryItemTypeOption(false);
+        LibraryItemType itemType = getItemTypeFromUser(false);
 
         if (itemType == LibraryItemType.INVALID_TYPE)
             return "type is invalid!\n";
@@ -65,9 +65,7 @@ public class AppHandler {
     }
 
     private String handleRemoveCommand() {
-        System.out.println("Enter Type : ");
-        System.out.println(cliManager.getLibraryItemTypeOptions(true));
-        LibraryItemType itemType = cliManager.getLibraryItemTypeOption(true);
+        LibraryItemType itemType = getItemTypeFromUser(true);
 
         if (itemType == LibraryItemType.INVALID_TYPE)
             return "type is invalid!\n";
@@ -78,9 +76,7 @@ public class AppHandler {
     }
 
     private String handleUpdateCommand() {
-        System.out.println("Enter Type : ");
-        System.out.println(cliManager.getLibraryItemTypeOptions(false));
-        LibraryItemType itemType = cliManager.getLibraryItemTypeOption(false);
+        LibraryItemType itemType = getItemTypeFromUser(false);
 
         if (itemType == LibraryItemType.INVALID_TYPE)
             return "type is invalid!\n";
@@ -89,9 +85,7 @@ public class AppHandler {
     }
 
     private String handlePrintListCommand() {
-        System.out.println("Enter Type : ");
-        System.out.println(cliManager.getLibraryItemTypeOptions(true));
-        LibraryItemType itemType = cliManager.getLibraryItemTypeOption(true);
+        LibraryItemType itemType = getItemTypeFromUser(true);
 
         if (itemType == LibraryItemType.INVALID_TYPE)
             return "type is invalid!\n";
@@ -102,9 +96,7 @@ public class AppHandler {
     }
 
     private String handleSearchCommand() {
-        System.out.println("Enter Type : ");
-        System.out.println(cliManager.getLibraryItemTypeOptions(true));
-        LibraryItemType itemType = cliManager.getLibraryItemTypeOption(true);
+        LibraryItemType itemType = getItemTypeFromUser(true);
 
         if (itemType == LibraryItemType.INVALID_TYPE)
             return "type is invalid!\n";
@@ -115,11 +107,48 @@ public class AppHandler {
     }
 
     private String handleSortCommand() {
+        // We Suppose that the sort operation is only for Book items
         return itemHandlersMap.get(LibraryItemType.BOOK).handleSortItems();
     }
 
-    private String processExitCommand() {
+    private String handleBorrowCommand(){
+        LibraryItemType itemType = getItemTypeFromUser(false);
+
+        if (itemType == LibraryItemType.INVALID_TYPE)
+            return "type is invalid!\n";
+        else
+            return itemHandlersMap.get(itemType).handleBorrowItems();
+
+    }
+
+    private String handleReturnCommand(){
+        LibraryItemType itemType = getItemTypeFromUser(false);
+
+        if (itemType == LibraryItemType.INVALID_TYPE)
+            return "type is invalid!\n";
+        else
+            return itemHandlersMap.get(itemType).handleReturnItems();
+    }
+
+    private String handlePrintBorrowedItems(){
+        LibraryItemType itemType = getItemTypeFromUser(true);
+
+        if (itemType == LibraryItemType.INVALID_TYPE)
+            return "type is invalid!\n";
+        else if(itemType == LibraryItemType.ALL)
+            return allTypesHandler.handlePrintBorrowedItems();
+        else
+            return itemHandlersMap.get(itemType).handlePrintBorrowedItems();
+    }
+
+    private String handleExitCommand() {
         systemManager.finishSystem();
         return "system is finished!\n";
+    }
+
+    private LibraryItemType getItemTypeFromUser(boolean allOptions){
+        System.out.println("Enter Type : ");
+        System.out.println(cliManager.getLibraryItemTypeOptions(allOptions));
+        return cliManager.getLibraryItemTypeOption(allOptions);
     }
 }

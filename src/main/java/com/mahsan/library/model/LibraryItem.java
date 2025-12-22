@@ -1,12 +1,31 @@
 package com.mahsan.library.model;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public abstract class LibraryItem {
+    final protected String itemTypeStr;
     final protected String title;
     protected Status status;
+    protected LocalDate returnDate;
+    final public static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
-    public LibraryItem(String title , Status status){
+    public LibraryItem(String itemTypeStr , String title , Status status){
+        this.itemTypeStr = itemTypeStr;
         this.title = title;
         this.status = status;
+        this.returnDate = null;
+    }
+
+    public LibraryItem(String itemTypeStr , String title , Status status , LocalDate returnDate){
+        this.itemTypeStr = itemTypeStr;
+        this.title = title;
+        this.status = status;
+        this.returnDate = returnDate;
+    }
+
+    public String getItemTypeStr(){
+        return itemTypeStr;
     }
 
     public String getTitle(){
@@ -17,8 +36,20 @@ public abstract class LibraryItem {
         return status;
     }
 
+    public LocalDate getReturnDate(){
+        return returnDate;
+    }
+
+    public String getReturnDateStr(){
+        return returnDate.format(dateTimeFormatter);
+    }
+
     public void setStatus(Status status){
         this.status = status;
+    }
+
+    public void setReturnDate(LocalDate returnDate){
+        this.returnDate = returnDate;
     }
 
     public abstract void display();

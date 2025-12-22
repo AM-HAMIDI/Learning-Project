@@ -1,8 +1,6 @@
 package com.mahsan.library.model;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.mahsan.library.io.JsonHandler;
-
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Book extends LibraryItem implements HasAuthor{
@@ -10,7 +8,13 @@ public class Book extends LibraryItem implements HasAuthor{
     final private int releaseYear;
 
     public Book(String title, String author, int releaseYear, Status status) {
-        super(title , status);
+        super("Book" , title , status);
+        this.author = author;
+        this.releaseYear = releaseYear;
+    }
+
+    public Book(String title, String author, int releaseYear, Status status , LocalDate returnDate) {
+        super("Book" , title , status , returnDate);
         this.author = author;
         this.releaseYear = releaseYear;
     }
@@ -38,14 +42,23 @@ public class Book extends LibraryItem implements HasAuthor{
 
     @Override
     public String toString() {
-        return "(title : %s , author : %s , releaseYear : %d , status : %s)"
-                .formatted(title, author, releaseYear, status);
+        if(status == Status.BORROWED)
+            return "(type : %s , title : %s , author : %s , releaseYear : %d , status : %s , returnDate : %s)"
+                    .formatted(itemTypeStr , title, author, releaseYear, status , getReturnDateStr());
+        else
+            return "(type : %s , title : %s , author : %s , releaseYear : %d , status : %s)"
+                .formatted(itemTypeStr , title, author, releaseYear, status);
     }
 
     @Override
     public void display() {
-        System.out.printf(
-                "title : %s , author : %s , releaseYear : %d , status : %s%n",
-                title , author , releaseYear , status);
+        if(status == Status.BORROWED)
+            System.out.printf(
+                "type : %s , title : %s , author : %s , releaseYear : %d , status : %s , returnDate : %s%n",
+                itemTypeStr , title , author , releaseYear , status , getReturnDateStr());
+        else
+            System.out.printf(
+                    "type : %s , title : %s , author : %s , releaseYear : %d , status : %s%n",
+                    itemTypeStr , title , author , releaseYear , status);
     }
 }
