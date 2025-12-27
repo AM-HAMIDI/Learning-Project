@@ -4,28 +4,31 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public abstract class LibraryItem {
+    final protected LibraryItemType itemType;
     final protected String itemTypeStr;
     final protected String title;
     protected Status status;
     protected LocalDate returnDate;
     final public static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
-    public LibraryItem(String itemTypeStr , String title , Status status){
-        this.itemTypeStr = itemTypeStr;
+    public LibraryItem(LibraryItemType itemType , String title , Status status){
+        this.itemType = itemType;
+        this.itemTypeStr = itemType.getTypeStr();
         this.title = title;
         this.status = status;
         this.returnDate = null;
     }
 
-    public LibraryItem(String itemTypeStr , String title , Status status , LocalDate returnDate){
-        this.itemTypeStr = itemTypeStr;
+    public LibraryItem(LibraryItemType itemType , String title , Status status , LocalDate returnDate){
+        this.itemType = itemType;
+        this.itemTypeStr = itemType.getTypeStr();
         this.title = title;
         this.status = status;
         this.returnDate = returnDate;
     }
 
-    public String getItemTypeStr(){
-        return itemTypeStr;
+    public LibraryItemType getItemType(){
+        return itemType;
     }
 
     public String getTitle(){

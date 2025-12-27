@@ -142,7 +142,7 @@ public class AppHandler {
     }
 
     private String handleExitCommand() {
-        systemManager.finishSystem();
+        systemManager.finishApp();
         return "system is finished!\n";
     }
 

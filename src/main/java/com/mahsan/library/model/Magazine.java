@@ -9,13 +9,13 @@ public class Magazine extends LibraryItem implements HasPublisher{
     private final String publisher;
 
     public Magazine(String title, int issueNumber, String publisher, Status status) {
-        super("Magazine" , title, status);
+        super(LibraryItemType.MAGAZINE , title, status);
         this.issueNumber = issueNumber;
         this.publisher = publisher;
     }
 
     public Magazine(String title, int issueNumber, String publisher, Status status , LocalDate returnDate) {
-        super("Magazine" , title, status , returnDate);
+        super(LibraryItemType.MAGAZINE  , title, status , returnDate);
         this.issueNumber = issueNumber;
         this.publisher = publisher;
     }

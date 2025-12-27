@@ -26,7 +26,11 @@ public class LibraryTest {
     @Test
     public void testLibraryInitialization() {
         initializeLibrary(library);
-        ArrayList<Book> booksArrayList = library.getBooksArrayList();
+        ArrayList<Book> booksArrayList = new ArrayList<>();
+        for (LibraryItem item : library.sortItems(LibraryItemType.BOOK)) {
+            if (item instanceof Book book)
+                booksArrayList.add(book);
+        }
         assertEquals(10, booksArrayList.size());
         Book book1 = new Book("1984", "George Orwell", 1949, Status.EXIST);
         assertEquals(book1, booksArrayList.get(0));
@@ -43,18 +47,28 @@ public class LibraryTest {
             String author = JsonHandler.getProperty(jsonNode, "author");
             int releaseYear = Integer.parseInt(JsonHandler.getProperty(jsonNode, "releaseYear"));
             Status status = Status.getStatus(JsonHandler.getProperty(jsonNode, "status"));
-            library.insertBook(new Book(title, author, releaseYear, status));
+            library.insertLibraryItem(new Book(title, author, releaseYear, status));
         }
     }
 
     // ------------ Insert tests ------------
     @Test
     public void testLibrarySingleInsertion() {
-        assertTrue(library.getBooks().isEmpty());
+        ArrayList<Book> books = new ArrayList<>();
+        for (LibraryItem item : library.sortItems(LibraryItemType.BOOK)) {
+            if (item instanceof Book book)
+                books.add(book);
+        }
+        assertTrue(books.isEmpty());
         Book book = new Book("book1", "author1", 1, Status.EXIST);
-        library.insertBook(book);
-        assertFalse(library.getBooks().isEmpty());
-        assertEquals(book, library.getBooks().getHeadNode().getData());
+        library.insertLibraryItem(book);
+        books.clear();
+        for (LibraryItem item : library.sortItems(LibraryItemType.BOOK)) {
+            if (item instanceof Book b)
+                books.add(b);
+        }
+        assertFalse(books.isEmpty());
+        assertEquals(book, books.get(0));
     }
 
     @Test
@@ -62,10 +76,14 @@ public class LibraryTest {
         Book book1 = new Book("book1", "author1", 1, Status.EXIST);
         Book book2 = new Book("book2", "author2", 2, Status.BANNED);
         Book book3 = new Book("book3", "author3", 3, Status.BORROWED);
-        library.insertBook(book1);
-        library.insertBook(book2);
-        library.insertBook(book3);
-        ArrayList<Book> books = library.getBooksArrayList();
+        library.insertLibraryItem(book1);
+        library.insertLibraryItem(book2);
+        library.insertLibraryItem(book3);
+        ArrayList<Book> books = new ArrayList<>();
+        for (LibraryItem item : library.sortItems(LibraryItemType.BOOK)) {
+            if (item instanceof Book book)
+                books.add(book);
+        }
         assertEquals(book1, books.get(0));
         assertEquals(book2, books.get(1));
         assertEquals(book3, books.get(2));
@@ -74,30 +92,55 @@ public class LibraryTest {
     // ------------ Remove tests ------------
     @Test
     public void testRemoveFromEmptyLibrary() {
-        assertTrue(library.getBooks().isEmpty());
-        library.removeBook(new Book("book1", "author1", 1, Status.EXIST));
-        assertTrue(library.getBooks().isEmpty());
+        ArrayList<Book> books = new ArrayList<>();
+        for (LibraryItem item : library.sortItems(LibraryItemType.BOOK)) {
+            if (item instanceof Book book)
+                books.add(book);
+        }
+        assertTrue(books.isEmpty());
+        library.removeLibraryItem(new Book("book1", "author1", 1, Status.EXIST));
+        books.clear();
+        for (LibraryItem item : library.sortItems(LibraryItemType.BOOK)) {
+            if (item instanceof Book book)
+                books.add(book);
+        }
+        assertTrue(books.isEmpty());
     }
 
     @Test
     public void testRemoveNonExistingBook() {
         Book book1 = new Book("book1", "author1", 1, Status.EXIST);
         Book book2 = new Book("book2", "author2", 2, Status.BANNED);
-        library.insertBook(book1);
-        library.insertBook(book2);
-        library.removeBook(new Book("book3", "author3", 3, Status.BORROWED));
-        assertEquals(2, library.getBooks().getSize());
-        assertEquals(book1, library.getBooks().getHeadNode().getData());
-        assertEquals(book2, library.getBooks().getHeadNode().getNextNode().getData());
+        library.insertLibraryItem(book1);
+        library.insertLibraryItem(book2);
+        library.removeLibraryItem(new Book("book3", "author3", 3, Status.BORROWED));
+        ArrayList<Book> books = new ArrayList<>();
+        for (LibraryItem item : library.sortItems(LibraryItemType.BOOK)) {
+            if (item instanceof Book book)
+                books.add(book);
+        }
+        assertEquals(2, books.size());
+        assertEquals(book1, books.get(0));
+        assertEquals(book2, books.get(1));
     }
 
     @Test
     public void testRemoveSingleBook_1() {
         Book book1 = new Book("book1", "author1", 1, Status.EXIST);
-        library.insertBook(book1);
-        assertEquals(1, library.getBooks().getSize());
-        library.removeBook(book1);
-        assertTrue(library.getBooks().isEmpty());
+        library.insertLibraryItem(book1);
+        ArrayList<Book> books = new ArrayList<>();
+        for (LibraryItem item : library.sortItems(LibraryItemType.BOOK)) {
+            if (item instanceof Book book)
+                books.add(book);
+        }
+        assertEquals(1, books.size());
+        library.removeLibraryItem(book1);
+        books.clear();
+        for (LibraryItem item : library.sortItems(LibraryItemType.BOOK)) {
+            if (item instanceof Book book)
+                books.add(book);
+        }
+        assertTrue(books.isEmpty());
     }
 
     @Test
@@ -107,21 +150,21 @@ public class LibraryTest {
         Book book3 = new Book("book3", "author3", 3, Status.BORROWED);
         Book book4 = new Book("book1", "author1", 1, Status.EXIST);
         Book book5 = new Book("book2", "author2", 2, Status.BANNED);
-        library.insertBook(book1);
-        library.insertBook(book2);
-        library.insertBook(book3);
-        library.insertBook(book4);
-        library.insertBook(book5);
-
-        library.removeBook(new Book("book1", "author1", 1, Status.EXIST));
-
-        ArrayList<Book> libraryBooks = library.getBooksArrayList();
-
-        assertEquals(3, library.getBooks().getSize());
-        assertEquals(3, libraryBooks.size());
-        assertEquals(new Book("book2", "author2", 2, Status.BANNED), libraryBooks.get(0));
-        assertEquals(new Book("book3", "author3", 3, Status.BORROWED), libraryBooks.get(1));
-        assertEquals(new Book("book2", "author2", 2, Status.BANNED), libraryBooks.get(2));
+        library.insertLibraryItem(book1);
+        library.insertLibraryItem(book2);
+        library.insertLibraryItem(book3);
+        library.insertLibraryItem(book4);
+        library.insertLibraryItem(book5);
+        library.removeLibraryItem(new Book("book1", "author1", 1, Status.EXIST));
+        ArrayList<Book> books = new ArrayList<>();
+        for (LibraryItem item : library.sortItems(LibraryItemType.BOOK)) {
+            if (item instanceof Book book)
+                books.add(book);
+        }
+        assertEquals(3, books.size());
+        assertEquals(new Book("book2", "author2", 2, Status.BANNED), books.get(0));
+        assertEquals(new Book("book3", "author3", 3, Status.BORROWED), books.get(1));
+        assertEquals(new Book("book2", "author2", 2, Status.BANNED), books.get(2));
     }
 
     @Test
@@ -131,27 +174,30 @@ public class LibraryTest {
         Book book3 = new Book("book3", "author3", 3, Status.BORROWED);
         Book book4 = new Book("book1", "author1", 1, Status.EXIST);
         Book book5 = new Book("book4", "author4", 4, Status.BANNED);
-        library.insertBook(book1);
-        library.insertBook(book2);
-        library.insertBook(book3);
-        library.insertBook(book4);
-        library.insertBook(book5);
-
-        library.removeBook(new Book("book1", "author1", 1, Status.EXIST));
-
-        ArrayList<Book> libraryBooks = library.getBooksArrayList();
-
-        assertEquals(3, library.getBooks().getSize());
-        assertEquals(3, libraryBooks.size());
-        assertEquals(new Book("book2", "author2", 2, Status.BANNED), libraryBooks.get(0));
-        assertEquals(new Book("book3", "author3", 3, Status.BORROWED), libraryBooks.get(1));
-        assertEquals(new Book("book4", "author4", 4, Status.BANNED), libraryBooks.get(2));
-
-        library.removeBook(new Book("book2", "author2", 2, Status.BANNED));
-        libraryBooks = library.getBooksArrayList();
-        assertEquals(2, libraryBooks.size());
-        assertEquals(book3, libraryBooks.get(0));
-        assertEquals(book5, libraryBooks.get(1));
+        library.insertLibraryItem(book1);
+        library.insertLibraryItem(book2);
+        library.insertLibraryItem(book3);
+        library.insertLibraryItem(book4);
+        library.insertLibraryItem(book5);
+        library.removeLibraryItem(new Book("book1", "author1", 1, Status.EXIST));
+        ArrayList<Book> books = new ArrayList<>();
+        for (LibraryItem item : library.sortItems(LibraryItemType.BOOK)) {
+            if (item instanceof Book book)
+                books.add(book);
+        }
+        assertEquals(3, books.size());
+        assertEquals(new Book("book2", "author2", 2, Status.BANNED), books.get(0));
+        assertEquals(new Book("book3", "author3", 3, Status.BORROWED), books.get(1));
+        assertEquals(new Book("book4", "author4", 4, Status.BANNED), books.get(2));
+        library.removeLibraryItem(new Book("book2", "author2", 2, Status.BANNED));
+        books.clear();
+        for (LibraryItem item : library.sortItems(LibraryItemType.BOOK)) {
+            if (item instanceof Book book)
+                books.add(book);
+        }
+        assertEquals(2, books.size());
+        assertEquals(book3, books.get(0));
+        assertEquals(book5, books.get(1));
     }
 
     @Test
@@ -159,21 +205,26 @@ public class LibraryTest {
         Book book1 = new Book("book1", "author1", 1, Status.EXIST);
         Book book2 = new Book("book2", "author1", 12, Status.BANNED);
         Book book3 = new Book("book1", "author1", 1, Status.EXIST);
-        library.insertBook(book1);
-        library.insertBook(book2);
-        library.insertBook(book3);
-
-        ArrayList<Book> books = library.getBooksArrayList();
+        library.insertLibraryItem(book1);
+        library.insertLibraryItem(book2);
+        library.insertLibraryItem(book3);
+        ArrayList<Book> books = new ArrayList<>();
+        for (LibraryItem item : library.sortItems(LibraryItemType.BOOK)) {
+            if (item instanceof Book book)
+                books.add(book);
+        }
         assertEquals(book1, books.get(0));
         assertEquals(book2, books.get(1));
         assertEquals(book3, books.get(2));
-
-        library.updateBook(new Book("book1", "author1", 1, Status.EXIST), Status.BANNED);
+        library.updateLibraryItem(new Book("book1", "author1", 1, Status.EXIST), Status.BANNED);
         Book updatedBook = new Book("book1", "author1", 1, Status.BANNED);
-
-        ArrayList<Book> updatedBooks = library.getBooksArrayList();
-        assertEquals(updatedBook, updatedBooks.get(0));
-        assertEquals(updatedBook, updatedBooks.get(2));
+        books.clear();
+        for (LibraryItem item : library.sortItems(LibraryItemType.BOOK)) {
+            if (item instanceof Book book)
+                books.add(book);
+        }
+        assertEquals(updatedBook, books.get(0));
+        assertEquals(updatedBook, books.get(2));
     }
 
     @Test
@@ -181,11 +232,12 @@ public class LibraryTest {
         Book book1 = new Book("book1", "author1", 1, Status.EXIST);
         Book book2 = new Book("book2", "author2", 2, Status.BANNED);
         Book book3 = new Book("book3", "author3", 3, Status.BORROWED);
-        library.insertBook(book1);
-        library.insertBook(book2);
-        library.insertBook(book3);
-
-        Book book = library.searchBooksByTitle("book1");
+        library.insertLibraryItem(book1);
+        library.insertLibraryItem(book2);
+        library.insertLibraryItem(book3);
+        ArrayList<LibraryItem> found = library.searchItems(LibraryItemType.BOOK,
+                LibraryPredicates.titleEquals("book1"));
+        Book book = found.isEmpty() ? null : (Book) found.get(0);
         assertEquals(book1, book);
     }
 
@@ -197,13 +249,19 @@ public class LibraryTest {
         Book book4 = new Book("book4", "author2", 1, Status.EXIST);
         Book book5 = new Book("book5", "author2", 2, Status.BANNED);
         Book book6 = new Book("book6", "author5", 3, Status.BORROWED);
-        library.insertBook(book1);
-        library.insertBook(book2);
-        library.insertBook(book3);
-        library.insertBook(book4);
-        library.insertBook(book5);
-        library.insertBook(book6);
-        ArrayList<Book> authorBooks = library.searchBooksByAuthor("author2");
+        library.insertLibraryItem(book1);
+        library.insertLibraryItem(book2);
+        library.insertLibraryItem(book3);
+        library.insertLibraryItem(book4);
+        library.insertLibraryItem(book5);
+        library.insertLibraryItem(book6);
+        ArrayList<LibraryItem> found = library.searchItems(LibraryItemType.BOOK,
+                LibraryPredicates.authorEquals("author2"));
+        ArrayList<Book> authorBooks = new ArrayList<>();
+        for (LibraryItem item : found) {
+            if (item instanceof Book book)
+                authorBooks.add(book);
+        }
         assertEquals(3, authorBooks.size());
         assertEquals(book2, authorBooks.get(0));
         assertEquals(book4, authorBooks.get(1));
@@ -217,12 +275,16 @@ public class LibraryTest {
         Book book3 = new Book("book3", "author3", 3, Status.BORROWED);
         Book book4 = new Book("book4", "author2", 2, Status.EXIST);
         Book book5 = new Book("book5", "author2", 10, Status.BANNED);
-        library.insertBook(book1);
-        library.insertBook(book2);
-        library.insertBook(book3);
-        library.insertBook(book4);
-        library.insertBook(book5);
-        ArrayList<Book> sortedBooks = library.sortBooksByReleaseYear();
+        library.insertLibraryItem(book1);
+        library.insertLibraryItem(book2);
+        library.insertLibraryItem(book3);
+        library.insertLibraryItem(book4);
+        library.insertLibraryItem(book5);
+        ArrayList<Book> sortedBooks = new ArrayList<>();
+        for (LibraryItem item : library.sortItems(LibraryItemType.BOOK)) {
+            if (item instanceof Book book)
+                sortedBooks.add(book);
+        }
         assertEquals(book1, sortedBooks.get(0));
         assertEquals(book4, sortedBooks.get(1));
         assertEquals(book3, sortedBooks.get(2));

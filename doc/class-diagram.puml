@@ -1,0 +1,191 @@
+@startuml
+' Library Management System Class Diagram
+
+' Interfaces
+interface HasAuthor {
+    +getAuthor()
+}
+interface HasPublisher {
+    +getPublisher()
+}
+
+' Enums
+enum Status {
+    EXIST
+    BORROWED
+    BANNED
+}
+enum LibraryItemType {
+    INVALID_TYPE
+    BOOK
+    MAGAZINE
+    REFERENCE
+    THESIS
+    ALL
+}
+
+' Generic Linked List
+class GenericLinkedList<T> {
+    - headNode: GenericNode<T>
+    - size: int
+    +insert(data: T)
+    +removeByKey(key: T)
+    +getHeadNode(): GenericNode<T>
+    +getSize(): int
+    +isEmpty(): boolean
+}
+class GenericNode<T> {
+    - data: T
+    - nextNode: GenericNode<T>
+    +getData(): T
+    +getNextNode(): GenericNode<T>
+    +setData(data: T)
+    +setNextNode(node: GenericNode<T>)
+}
+
+' LibraryItem hierarchy
+abstract class LibraryItem {
+    #itemTypeStr: String
+    #title: String
+    #status: Status
+    #returnDate: LocalDate
+    +getTitle(): String
+    +getStatus(): Status
+    +getReturnDate(): LocalDate
+    +setStatus(status: Status)
+    +setReturnDate(date: LocalDate)
+    +display()
+}
+class Book {
+    - author: String
+    - releaseYear: int
+    +getAuthor(): String
+    +getReleaseYear(): int
+}
+class Magazine {
+    - issueNumber: int
+    - publisher: String
+    +getIssueNumber(): int
+    +getPublisher(): String
+}
+class Reference {
+    - category: String
+    - publisher: String
+    +getCategory(): String
+    +getPublisher(): String
+}
+class Thesis {
+    - author: String
+    - defenseYear: int
+    +getAuthor(): String
+    +getDefenseYear(): int
+}
+
+' Library
+class Library {
+    - libraryItems: GenericLinkedList<LibraryItem>
+    +insertLibraryItem(item: LibraryItem)
+    +removeLibraryItem(item: LibraryItem)
+    +updateLibraryItem(item: LibraryItem, status: Status)
+    +borrowLibraryItem(item: LibraryItem, returnDate: LocalDate)
+    +returnLibraryItem(item: LibraryItem)
+    +searchItems(filter)
+    +sortItems(filter, comparator)
+    +getItems(filter)
+    +insertBook(book: Book)
+    +removeBook(book: Book)
+    +updateBook(book: Book, status: Status)
+    +getBooks(): GenericLinkedList<Book>
+    +getBooksArrayList(): ArrayList<Book>
+    +searchBooksByTitle(title: String): Book
+    +searchBooksByAuthor(author: String): ArrayList<Book>
+    +sortBooksByReleaseYear(): ArrayList<Book>
+}
+
+' Handlers
+abstract class ItemHandler {
+    - cliManager: CliManager
+    - library: Library
+    - filter
+    - itemTypeStr: String
+    +handleRemoveItem()
+    +handleUpdateItem()
+    +handlePrintItemsList()
+    +handleBorrowItems()
+    +handleReturnItems()
+    +handlePrintBorrowedItems()
+    +handleInsertItem()
+    +handleSearchItems()
+    +handleSortItems()
+    +getFields()
+}
+class BookHandler
+class MagazineHandler
+class ReferenceHandler
+class ThesisHandler
+class AllTypesHandler {
+    - cliManager: CliManager
+    - library: Library
+    +handleRemoveItem()
+    +handlePrintItemsList()
+    +handleSearchItems()
+    +handlePrintBorrowedItems()
+}
+
+class AppManager {
+    - cliManager: CliManager
+    - library: Library
+    - systemProcessor: AppHandler
+    +initializeApp()
+    +startApp()
+    +finishApp()
+    +AddToCommandHistory()
+    +showCommandResult()
+}
+class AppHandler {
+    - systemManager: AppManager
+    - cliManager: CliManager
+    - library: Library
+    - allTypesHandler: AllTypesHandler
+    - itemHandlersMap: HashMap<LibraryItemType, ItemHandler>
+    +handleCommand(commandMode: CommandMode)
+}
+class CliManager {
+    - scanner: Scanner
+    +showUI()
+    +getCommandModeOptions()
+    +getLibraryItemTypeOptions()
+    +getCommandMode()
+    +getLibraryItemTypeOption()
+    +getInputError()
+    +getInputString()
+    +getInputInteger()
+    +getInputStatus()
+}
+
+' Relationships
+Library --> GenericLinkedList
+GenericLinkedList --> GenericNode
+LibraryItem <|-- Book
+LibraryItem <|-- Magazine
+LibraryItem <|-- Reference
+LibraryItem <|-- Thesis
+Book ..|> HasAuthor
+Thesis ..|> HasAuthor
+Magazine ..|> HasPublisher
+Reference ..|> HasPublisher
+AppManager --> CliManager
+AppManager --> Library
+AppManager --> AppHandler
+AppHandler --> AllTypesHandler
+AppHandler --> ItemHandler
+AppHandler --> CliManager
+AppHandler --> Library
+ItemHandler <|-- BookHandler
+ItemHandler <|-- MagazineHandler
+ItemHandler <|-- ReferenceHandler
+ItemHandler <|-- ThesisHandler
+AllTypesHandler --> Library
+AllTypesHandler --> CliManager
+
+@enduml

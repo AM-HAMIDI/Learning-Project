@@ -8,9 +8,9 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
-public class BookHandler extends ItemHandler{
-    public BookHandler(CliManager cliManager , Library library){
-        super(cliManager , library , LibraryPredicates.isBook() , "Book");
+public class BookHandler extends ItemHandler {
+    public BookHandler(CliManager cliManager, Library library) {
+        super(cliManager, library, LibraryPredicates.isBook(), "Book");
     }
 
     @Override
@@ -31,7 +31,7 @@ public class BookHandler extends ItemHandler{
         if (status == null)
             return "status is invalid!\n";
 
-        getLibrary().insertLibraryItem(new Book(title , author , releaseYear , status));
+        getLibrary().insertLibraryItem(new Book(title, author, releaseYear, status));
 
         return "Book added successfully!\n";
     }
@@ -53,22 +53,26 @@ public class BookHandler extends ItemHandler{
         switch (searchType) {
             case 1 -> {
                 String title = getCliManager().getInputString("title");
-                if (title.isEmpty()) return "title is invalid!\n";
+                if (title.isEmpty())
+                    return "title is invalid!\n";
                 filter = LibraryPredicates.titleEquals(title);
             }
             case 2 -> {
                 Status status = getCliManager().getInputStatus();
-                if (status == null) return "status is invalid!\n";
+                if (status == null)
+                    return "status is invalid!\n";
                 filter = LibraryPredicates.statusEquals(status);
             }
             case 3 -> {
                 String author = getCliManager().getInputString("author");
-                if (author.isEmpty()) return "author is invalid!\n";
+                if (author.isEmpty())
+                    return "author is invalid!\n";
                 filter = LibraryPredicates.authorEquals(author);
             }
             case 4 -> {
                 int releaseYear = getCliManager().getInputInteger("releaseYear");
-                if(releaseYear < 0) return "releaseYear is invalid!\n";
+                if (releaseYear < 0)
+                    return "releaseYear is invalid!\n";
                 filter = LibraryPredicates.bookReleaseYearIs(releaseYear);
             }
             default -> {
@@ -76,16 +80,11 @@ public class BookHandler extends ItemHandler{
             }
         }
 
-        filter = LibraryPredicates.and(
-                LibraryPredicates.isBook(),
-                filter
-        );
-
-        return search(filter , "Books");
+        return search(filter, "Books");
     }
 
-    private String search(Predicate<LibraryItem> filter , String label) {
-        ArrayList<LibraryItem> matchedItems = getLibrary().searchItems(filter);
+    private String search(Predicate<LibraryItem> filter, String label) {
+        ArrayList<LibraryItem> matchedItems = getLibrary().searchItems(LibraryItemType.BOOK, filter);
         if (matchedItems.isEmpty())
             return "No " + label + " found matching your search\n";
 
@@ -101,11 +100,9 @@ public class BookHandler extends ItemHandler{
     }
 
     @Override
-    public String handleSortItems(){
-        var filter = LibraryPredicates.isBook();
-        var comparator = LibraryComparators.bookReleaseYearAscComparator();
-
-        ArrayList<LibraryItem> sortedItems = getLibrary().sortItems(filter , comparator);
+    public String handleSortItems() {
+        var itemType = LibraryItemType.BOOK;
+        ArrayList<LibraryItem> sortedItems = getLibrary().sortItems(itemType);
         if (sortedItems.isEmpty())
             return "library is empty!\n";
 

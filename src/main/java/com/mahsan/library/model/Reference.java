@@ -8,13 +8,13 @@ public class Reference extends LibraryItem implements HasPublisher{
     private final String publisher;
 
     public Reference(String title , String category , String publisher , Status status){
-        super("Reference" , title , status);
+        super(LibraryItemType.REFERENCE , title , status);
         this.category = category;
         this.publisher = publisher;
     }
 
     public Reference(String title , String category , String publisher , Status status , LocalDate returnDate){
-        super("Reference" , title , status , returnDate);
+        super(LibraryItemType.REFERENCE  , title , status , returnDate);
         this.category = category;
         this.publisher = publisher;
     }

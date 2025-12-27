@@ -8,13 +8,13 @@ public class Book extends LibraryItem implements HasAuthor{
     final private int releaseYear;
 
     public Book(String title, String author, int releaseYear, Status status) {
-        super("Book" , title , status);
+        super(LibraryItemType.BOOK , title , status);
         this.author = author;
         this.releaseYear = releaseYear;
     }
 
     public Book(String title, String author, int releaseYear, Status status , LocalDate returnDate) {
-        super("Book" , title , status , returnDate);
+        super(LibraryItemType.BOOK , title , status , returnDate);
         this.author = author;
         this.releaseYear = releaseYear;
     }

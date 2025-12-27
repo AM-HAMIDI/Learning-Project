@@ -8,13 +8,13 @@ public class Thesis extends LibraryItem implements HasAuthor{
     private final int defenseYear;
 
     public Thesis(String title, String author, int defenseYear, Status status) {
-        super("Thesis" , title, status);
+        super(LibraryItemType.THESIS , title, status);
         this.author = author;
         this.defenseYear = defenseYear;
     }
 
     public Thesis(String title, String author, int defenseYear, Status status , LocalDate returnDate) {
-        super("Thesis" , title, status , returnDate);
+        super(LibraryItemType.THESIS , title, status , returnDate);
         this.author = author;
         this.defenseYear = defenseYear;
     }

@@ -23,7 +23,7 @@ public class AppManager {
     private Library library = new Library();
     private AppHandler systemProcessor;
 
-    public void initializeSystem() {
+    public void initializeApp() {
         if (!configJsonHandler.isJsonFileValid())
             isSystemInitialized = false;
         commandHistoryFilePath = ConfigResolver.resolve(configJsonHandler.getProperty("CommandHistory"));
@@ -64,7 +64,7 @@ public class AppManager {
         return true;
     }
 
-    public void startSystem() {
+    public void startApp() {
         if (!isSystemInitialized)
             return;
         isSystemRunning = true;
@@ -75,7 +75,7 @@ public class AppManager {
         }
     }
 
-    protected void finishSystem() {
+    protected void finishApp() {
         isSystemRunning = false;
     }
 

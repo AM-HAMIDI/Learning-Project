@@ -4,18 +4,6 @@
   "result" : "Borrowed items list :\n(type : Book , title : To Kill a Mockingbird , author : Harper Lee , releaseYear : 1960 , status : BORROWED , returnDate : 2025/03/15)\n(type : Book , title : Dune , author : Frank Herbert , releaseYear : 1965 , status : BORROWED , returnDate : 2025/11/02)\n\n"
 }, {
   "index" : "2",
-  "command" : "BORROW",
-  "result" : "Book does not exist!\n"
-}, {
-  "index" : "3",
-  "command" : "PRINT_BORROWED_ITEMS",
-  "result" : "Borrowed Book list :\n(type : Book , title : To Kill a Mockingbird , author : Harper Lee , releaseYear : 1960 , status : BORROWED , returnDate : 2025/03/15)\n(type : Book , title : Dune , author : Frank Herbert , releaseYear : 1965 , status : BORROWED , returnDate : 2025/11/02)\n\n"
-}, {
-  "index" : "4",
-  "command" : "RETURN",
-  "result" : "Book returned successfully!\n"
-}, {
-  "index" : "5",
-  "command" : "PRINT_BORROWED_ITEMS",
-  "result" : "Borrowed items list :\n(type : Book , title : To Kill a Mockingbird , author : Harper Lee , releaseYear : 1960 , status : BORROWED , returnDate : 2025/03/15)\n\n"
+  "command" : "EXIT",
+  "result" : "system is finished!\n"
 } ]
