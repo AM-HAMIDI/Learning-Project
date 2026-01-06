@@ -1,4 +1,12 @@
-package com.mahsan.library.model;
+package com.mahsan.library.model.library;
+
+import com.mahsan.library.model.base.HasAuthor;
+import com.mahsan.library.model.base.HasPublisher;
+import com.mahsan.library.model.base.Status;
+import com.mahsan.library.model.entities.Book;
+import com.mahsan.library.model.entities.Magazine;
+import com.mahsan.library.model.entities.Reference;
+import com.mahsan.library.model.entities.Thesis;
 
 import java.util.Arrays;
 import java.util.function.Predicate;

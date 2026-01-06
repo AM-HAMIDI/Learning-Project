@@ -1,9 +1,16 @@
-package com.mahsan.library.model;
+package com.mahsan.library.model.entities;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.mahsan.library.io.JsonHandler;
+import com.mahsan.library.model.base.HasAuthor;
+import com.mahsan.library.model.base.Status;
+import com.mahsan.library.model.library.LibraryItem;
+import com.mahsan.library.model.library.LibraryItemType;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Book extends LibraryItem implements HasAuthor{
+public class Book extends LibraryItem implements HasAuthor {
     final private String author;
     final private int releaseYear;
 
@@ -17,6 +24,23 @@ public class Book extends LibraryItem implements HasAuthor{
         super(LibraryItemType.BOOK , title , status , returnDate);
         this.author = author;
         this.releaseYear = releaseYear;
+    }
+
+    public static Book getFromJson(JsonNode jsonNode){
+        String title = JsonHandler.getProperty(jsonNode, "title");
+        String author = JsonHandler.getProperty(jsonNode, "author");
+        int releaseYear = Integer.parseInt(JsonHandler.getProperty(jsonNode, "releaseYear"));
+        Status status = Status.getStatus(JsonHandler.getProperty(jsonNode, "status"));
+
+        if (status == Status.BORROWED) {
+            if(!jsonNode.has("returnDate"))
+                return null;
+            String returnDateStr = JsonHandler.getProperty(jsonNode, "returnDate");
+            LocalDate returnDate = LocalDate.parse(returnDateStr, LibraryItem.dateTimeFormatter);
+            return new Book(title, author, releaseYear, status, returnDate);
+        } else {
+            return new Book(title, author, releaseYear, status);
+        }
     }
 
     public String getAuthor() {

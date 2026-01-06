@@ -1,4 +1,6 @@
-package com.mahsan.library.model;
+package com.mahsan.library.model.library;
+
+import com.mahsan.library.model.base.Status;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

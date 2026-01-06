@@ -1,4 +1,7 @@
-package com.mahsan.library.model;
+package com.mahsan.library.model.base;
+
+import com.mahsan.library.model.library.LibraryItem;
+import com.mahsan.library.model.library.LibraryItemType;
 
 import java.util.*;
 

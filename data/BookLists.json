@@ -25,7 +25,8 @@
     "title": "The Great Gatsby",
     "author": "F. Scott Fitzgerald",
     "releaseYear": 1925,
-    "status": "EXIST"
+    "status": "BORROWED",
+    "returnDate": "2026/01/20"
   },
   {
     "type": "Book",
@@ -33,42 +34,73 @@
     "author": "Harper Lee",
     "releaseYear": 1960,
     "status": "BORROWED",
-    "returnDate": "2025/03/15"
+    "returnDate": "2026/02/10"
   },
   {
-    "type": "Book",
-    "title": "Brave New World",
-    "author": "Aldous Huxley",
-    "releaseYear": 1932,
+    "type": "Magazine",
+    "title": "National Geographic",
+    "issueNumber": 732,
+    "publisher": "National Geographic Society",
     "status": "EXIST"
   },
   {
-    "type": "Book",
-    "title": "Fahrenheit 451",
-    "author": "Ray Bradbury",
-    "releaseYear": 1953,
+    "type": "Magazine",
+    "title": "TIME",
+    "issueNumber": 1013,
+    "publisher": "TIME USA LLC",
     "status": "EXIST"
   },
   {
-    "type": "Book",
-    "title": "Dune",
-    "author": "Frank Herbert",
-    "releaseYear": 1965,
+    "type": "Magazine",
+    "title": "The Economist",
+    "issueNumber": 1500,
+    "publisher": "The Economist Group",
     "status": "BORROWED",
-    "returnDate": "2025/11/02"
+    "returnDate": "2026/03/15"
   },
   {
-    "type": "Book",
-    "title": "The Catcher in the Rye",
-    "author": "J.D. Salinger",
-    "releaseYear": 1951,
+    "type": "Reference",
+    "title": "Encyclopedia Britannica",
+    "category": "General Knowledge",
+    "publisher": "Britannica Inc.",
     "status": "EXIST"
   },
   {
-    "type": "Book",
-    "title": "Animal Farm",
-    "author": "George Orwell",
-    "releaseYear": 1945,
-    "status": "BANNED"
+    "type": "Reference",
+    "title": "Oxford English Dictionary",
+    "category": "Language",
+    "publisher": "Oxford University Press",
+    "status": "BORROWED",
+    "returnDate": "2026/02/28"
+  },
+  {
+    "type": "Reference",
+    "title": "Medical Dictionary",
+    "category": "Medicine",
+    "publisher": "Merriam-Webster",
+    "status": "EXIST"
+  },
+  {
+    "type": "Thesis",
+    "title": "Quantum Computing for Beginners",
+    "author": "Alice Johnson",
+    "defenseYear": 2018,
+    "status": "EXIST"
+  },
+  {
+    "type": "Thesis",
+    "title": "Exploring Artificial Intelligence",
+    "author": "Bob Smith",
+    "defenseYear": 2015,
+    "status": "BORROWED",
+    "returnDate": "2025/12/30"
+  },
+  {
+    "type": "Thesis",
+    "title": "Advanced Machine Learning Techniques",
+    "author": "Carol White",
+    "defenseYear": 2020,
+    "status": "BORROWED",
+    "returnDate": "2026/01/25"
   }
 ]

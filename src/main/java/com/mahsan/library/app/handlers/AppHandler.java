@@ -1,19 +1,25 @@
-package com.mahsan.library.app;
+package com.mahsan.library.app.handlers;
 
+import com.mahsan.library.app.managers.AppManager;
 import com.mahsan.library.cli.*;
-import com.mahsan.library.model.*;
+import com.mahsan.library.model.library.Library;
+import com.mahsan.library.model.library.LibraryItemType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AppHandler {
-    private AppManager systemManager;
+
+    private AppManager appManager;
     private CliManager cliManager;
     private Library library;
+
+    // Type handlers
     private AllTypesHandler allTypesHandler;
     private HashMap<LibraryItemType, ItemHandler> itemHandlersMap = new HashMap<>();
 
-    public AppHandler(AppManager systemManager, CliManager cliManager, Library library) {
-        this.systemManager = systemManager;
+    public AppHandler(AppManager appManager, CliManager cliManager, Library library) {
+        this.appManager = appManager;
         this.cliManager = cliManager;
         this.library = library;
         this.allTypesHandler = new AllTypesHandler(cliManager, library);
@@ -27,24 +33,21 @@ public class AppHandler {
         itemHandlersMap.put(LibraryItemType.THESIS, new ThesisHandler(cliManager, library));
     }
 
-    public void handleCommand(CommandMode commandMode) {
-        String commandResult = "";
-        switch (commandMode) {
-            case INVALID_COMMAND -> commandResult = handleInvalidCommand();
-            case HELP -> commandResult = handleHelpCommand();
-            case INSERT -> commandResult = handleInsertCommand();
-            case REMOVE -> commandResult = handleRemoveCommand();
-            case UPDATE -> commandResult = handleUpdateCommand();
-            case PRINT_LIST -> commandResult = handlePrintListCommand();
-            case SEARCH -> commandResult = handleSearchCommand();
-            case SORT -> commandResult = handleSortCommand();
-            case BORROW -> commandResult = handleBorrowCommand();
-            case RETURN -> commandResult = handleReturnCommand();
-            case PRINT_BORROWED_ITEMS -> commandResult = handlePrintBorrowedItems();
-            case EXIT -> commandResult = handleExitCommand();
-        }
-        systemManager.AddToCommandHistory(commandMode, commandResult);
-        systemManager.showCommandResult(commandResult);
+    public String handleCommand(CommandMode commandMode) {
+        return switch (commandMode) {
+            case INVALID_COMMAND -> handleInvalidCommand();
+            case HELP -> handleHelpCommand();
+            case INSERT -> handleInsertCommand();
+            case REMOVE -> handleRemoveCommand();
+            case UPDATE -> handleUpdateCommand();
+            case PRINT_LIST -> handlePrintListCommand();
+            case SEARCH -> handleSearchCommand();
+            case SORT -> handleSortCommand();
+            case BORROW -> handleBorrowCommand();
+            case RETURN -> handleReturnCommand();
+            case PRINT_BORROWED_ITEMS -> handlePrintBorrowedItems();
+            case EXIT -> handleExitCommand();
+        };
     }
 
     private String handleInvalidCommand() {
@@ -142,7 +145,6 @@ public class AppHandler {
     }
 
     private String handleExitCommand() {
-        systemManager.finishApp();
         return "system is finished!\n";
     }
 

@@ -1,4 +1,4 @@
-package com.mahsan.library.model;
+package com.mahsan.library.model.base;
 
 public interface HasPublisher {
     String getPublisher();

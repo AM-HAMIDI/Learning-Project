@@ -1,13 +1,12 @@
-package com.mahsan.library.app;
+package com.mahsan.library.app.handlers;
 
 import com.mahsan.library.cli.CliManager;
-import com.mahsan.library.model.Library;
-import com.mahsan.library.model.LibraryItem;
-import com.mahsan.library.model.LibraryPredicates;
-import com.mahsan.library.model.Status;
+import com.mahsan.library.model.library.Library;
+import com.mahsan.library.model.library.LibraryItem;
+import com.mahsan.library.model.library.LibraryPredicates;
+import com.mahsan.library.model.base.Status;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.function.Predicate;

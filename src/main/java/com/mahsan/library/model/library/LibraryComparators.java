@@ -1,4 +1,7 @@
-package com.mahsan.library.model;
+package com.mahsan.library.model.library;
+
+import com.mahsan.library.model.entities.Book;
+import com.mahsan.library.model.entities.Thesis;
 
 import java.util.Comparator;
 

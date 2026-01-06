@@ -1,7 +1,7 @@
 package com.mahsan.library.cli;
 
-import com.mahsan.library.model.LibraryItemType;
-import com.mahsan.library.model.Status;
+import com.mahsan.library.model.library.LibraryItemType;
+import com.mahsan.library.model.base.Status;
 import java.util.Scanner;
 
 public class CliManager {

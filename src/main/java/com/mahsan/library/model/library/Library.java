@@ -1,4 +1,7 @@
-package com.mahsan.library.model;
+package com.mahsan.library.model.library;
+
+import com.mahsan.library.model.base.Status;
+import com.mahsan.library.model.base.Container;
 
 import java.time.LocalDate;
 import java.util.*;

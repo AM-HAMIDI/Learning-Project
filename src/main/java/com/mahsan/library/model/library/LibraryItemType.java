@@ -1,4 +1,4 @@
-package com.mahsan.library.model;
+package com.mahsan.library.model.library;
 
 import java.util.Arrays;
 

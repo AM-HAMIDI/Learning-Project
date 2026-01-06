@@ -1,17 +1,19 @@
-package com.mahsan.library.app;
+package com.mahsan.library.app.handlers;
 
 import com.mahsan.library.cli.CliManager;
-import com.mahsan.library.model.*;
+import com.mahsan.library.model.base.Status;
+import com.mahsan.library.model.entities.Reference;
+import com.mahsan.library.model.library.Library;
+import com.mahsan.library.model.library.LibraryItem;
+import com.mahsan.library.model.library.LibraryPredicates;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
-public class MagazineHandler extends ItemHandler {
+public class ReferenceHandler extends ItemHandler {
 
-    public MagazineHandler(CliManager cliManager, Library library) {
-        super(cliManager, library , LibraryPredicates.isMagazine() , "Magazine");
+    public ReferenceHandler(CliManager cliManager, Library library) {
+        super(cliManager, library , LibraryPredicates.isReference() , "Reference");
     }
 
     @Override
@@ -20,9 +22,9 @@ public class MagazineHandler extends ItemHandler {
         if (title.isEmpty())
             return "title is invalid!\n";
 
-        int issueNumber = getCliManager().getInputInteger("issueNumber");
-        if (issueNumber == -1)
-            return "issue number is invalid!\n";
+        String category = getCliManager().getInputString("category");
+        if (category.isEmpty())
+            return "category is invalid!\n";
 
         String publisher = getCliManager().getInputString("publisher");
         if (publisher.isEmpty())
@@ -32,8 +34,8 @@ public class MagazineHandler extends ItemHandler {
         if (status == null)
             return "status is invalid!\n";
 
-        getLibrary().insertLibraryItem(new Magazine(title, issueNumber, publisher, status));
-        return "Magazine added successfully!\n";
+        getLibrary().insertLibraryItem(new Reference(title, category, publisher, status));
+        return "Reference added successfully!\n";
     }
 
     @Override
@@ -70,10 +72,10 @@ public class MagazineHandler extends ItemHandler {
                 filter = LibraryPredicates.publisherEquals(publisher);
             }
             case 4 -> {
-                int issueNumber = getCliManager().getInputInteger("issueNumber");
-                if (issueNumber < 0)
-                    return "issueNumber is invalid!\n";
-                filter = LibraryPredicates.magazineIssueNumberIs(issueNumber);
+                String category = getCliManager().getInputString("category");
+                if (category.isEmpty())
+                    return "category is invalid!\n";
+                filter = LibraryPredicates.referenceCategoryEquals(category);
             }
             default -> {
                 return "search type is invalid!\n";
@@ -81,10 +83,10 @@ public class MagazineHandler extends ItemHandler {
         }
 
         filter = LibraryPredicates.and(
-                LibraryPredicates.isMagazine(),
+                LibraryPredicates.isReference(),
                 filter);
 
-        return search(filter, "Magazines");
+        return search(filter, "References");
     }
 
     private String search(Predicate<LibraryItem> filter, String label) {
@@ -101,7 +103,7 @@ public class MagazineHandler extends ItemHandler {
 
     @Override
     public String getFields() {
-        return "1 - title\n2 - status\n3 - publisher\n4 - issueNumber";
+        return "1 - title\n2 - status\n3 - publisher\n4 - category";
     }
 
     @Override

@@ -1,16 +1,19 @@
-package com.mahsan.library.app;
+package com.mahsan.library.app.handlers;
 
 import com.mahsan.library.cli.CliManager;
-import com.mahsan.library.model.*;
+import com.mahsan.library.model.base.Status;
+import com.mahsan.library.model.entities.Magazine;
+import com.mahsan.library.model.library.Library;
+import com.mahsan.library.model.library.LibraryItem;
+import com.mahsan.library.model.library.LibraryPredicates;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
-public class BookHandler extends ItemHandler {
-    public BookHandler(CliManager cliManager, Library library) {
-        super(cliManager, library, LibraryPredicates.isBook(), "Book");
+public class MagazineHandler extends ItemHandler {
+
+    public MagazineHandler(CliManager cliManager, Library library) {
+        super(cliManager, library , LibraryPredicates.isMagazine() , "Magazine");
     }
 
     @Override
@@ -19,21 +22,20 @@ public class BookHandler extends ItemHandler {
         if (title.isEmpty())
             return "title is invalid!\n";
 
-        String author = getCliManager().getInputString("author");
-        if (author.isEmpty())
-            return "author is invalid!\n";
+        int issueNumber = getCliManager().getInputInteger("issueNumber");
+        if (issueNumber == -1)
+            return "issue number is invalid!\n";
 
-        int releaseYear = getCliManager().getInputInteger("releaseYear");
-        if (releaseYear == -1)
-            return "release year is invalid!\n";
+        String publisher = getCliManager().getInputString("publisher");
+        if (publisher.isEmpty())
+            return "publisher is invalid!\n";
 
         Status status = getCliManager().getInputStatus();
         if (status == null)
             return "status is invalid!\n";
 
-        getLibrary().insertLibraryItem(new Book(title, author, releaseYear, status));
-
-        return "Book added successfully!\n";
+        getLibrary().insertLibraryItem(new Magazine(title, issueNumber, publisher, status));
+        return "Magazine added successfully!\n";
     }
 
     @Override
@@ -64,27 +66,31 @@ public class BookHandler extends ItemHandler {
                 filter = LibraryPredicates.statusEquals(status);
             }
             case 3 -> {
-                String author = getCliManager().getInputString("author");
-                if (author.isEmpty())
-                    return "author is invalid!\n";
-                filter = LibraryPredicates.authorEquals(author);
+                String publisher = getCliManager().getInputString("publisher");
+                if (publisher.isEmpty())
+                    return "publisher is invalid!\n";
+                filter = LibraryPredicates.publisherEquals(publisher);
             }
             case 4 -> {
-                int releaseYear = getCliManager().getInputInteger("releaseYear");
-                if (releaseYear < 0)
-                    return "releaseYear is invalid!\n";
-                filter = LibraryPredicates.bookReleaseYearIs(releaseYear);
+                int issueNumber = getCliManager().getInputInteger("issueNumber");
+                if (issueNumber < 0)
+                    return "issueNumber is invalid!\n";
+                filter = LibraryPredicates.magazineIssueNumberIs(issueNumber);
             }
             default -> {
                 return "search type is invalid!\n";
             }
         }
 
-        return search(filter, "Books");
+        filter = LibraryPredicates.and(
+                LibraryPredicates.isMagazine(),
+                filter);
+
+        return search(filter, "Magazines");
     }
 
     private String search(Predicate<LibraryItem> filter, String label) {
-        ArrayList<LibraryItem> matchedItems = getLibrary().searchItems(LibraryItemType.BOOK, filter);
+        ArrayList<LibraryItem> matchedItems = getLibrary().searchItems(filter);
         if (matchedItems.isEmpty())
             return "No " + label + " found matching your search\n";
 
@@ -95,22 +101,13 @@ public class BookHandler extends ItemHandler {
         return result.toString();
     }
 
+    @Override
     public String getFields() {
-        return "1 - title\n2 - status\n3 - author\n4 - releaseYear";
+        return "1 - title\n2 - status\n3 - publisher\n4 - issueNumber";
     }
 
     @Override
     public String handleSortItems() {
-        var itemType = LibraryItemType.BOOK;
-        ArrayList<LibraryItem> sortedItems = getLibrary().sortItems(itemType);
-        if (sortedItems.isEmpty())
-            return "library is empty!\n";
-
-        StringBuilder result = new StringBuilder();
-        result.append("sorted books list : \n");
-        for (LibraryItem libraryItem : sortedItems) {
-            result.append(libraryItem).append("\n");
-        }
-        return result.toString();
+        return "sort operation is not determinded for this type\n";
     }
 }

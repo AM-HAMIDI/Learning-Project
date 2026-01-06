@@ -1,6 +1,6 @@
 package com.mahsan.library;
 
-import com.mahsan.library.app.AppManager;
+import com.mahsan.library.app.managers.AppManager;
 
 public class Main {
     public static void main(String[] args) {

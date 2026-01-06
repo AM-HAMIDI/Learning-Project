@@ -6,10 +6,6 @@ public final class ConfigResolver {
     private ConfigResolver() {
     }
 
-    public static String getProjectRoot() {
-        return projectRootPath;
-    }
-
     public static String resolve(String relativePath) {
         if (relativePath == null || relativePath.isEmpty()) {
             return projectRootPath;
